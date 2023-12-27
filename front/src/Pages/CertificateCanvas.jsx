@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from "react";
+// import imagemin from 'imagemin';
+// import imageminPngquant from 'imagemin-pngquant';
 
-const CertificateCanvas = ({ data,props }) => {
-  const [a, setA] = useState("");
-  // const [pr,setPr]=useState("")
-  console.log("datacert:", data);
-  const { name, type, course } = data;
-  // console.log(name,type,course,props)
+
+const CertificateCanvas = ({ data, handleCanvasRef }) => {
+
+  const {_id, name, type, course } = data;
   
-  // console.log("props:",props)
   useEffect(() => {
-
-    
     const canvas = document.getElementById("myCanvas");
     const ctx = canvas.getContext("2d");
-    // const { name, type, course } = data;
-    // console.log("asdad:",canvas.toDataURL())
-    // Draw a border
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
 
     // Load and draw image to fit the canvas
     const img = new Image();
     // img.setAttribute('crossorigin', 'anonymous');
-    img.crossOrigin = 'anonymous';
+    img.crossOrigin = "anonymous";
     img.onload = function () {
       // Calculate the scale factor to fit the image within the canvas
       const scaleFactor = Math.min(
@@ -37,29 +31,37 @@ const CertificateCanvas = ({ data,props }) => {
       const x = (canvas.width - newWidth) / 2;
       const y = (canvas.height - newHeight) / 2;
 
-      // Draw the image on the canvas
+      
       ctx.drawImage(img, x, y, newWidth, newHeight);
 
-
-      
       drawContent();
-      setA(canvas);
-      props(a)
-      // console.log()
-      // canvas.toBlob((blob) => {
-      //   const url = URL.createObjectURL(blob);
-      //   console.log("url:",url)
-      //   // Now 'url' contains the data URL equivalent
-      // });
+      
+
+      try {
+
+        localStorage.setItem(
+          "certificate-image",
+          canvas.toDataURL("image/png")
+        );
+      } catch (err) {
+        console.error(`Error saving image to localStorage: ${err}`);
+      }
+
+
+      handleCanvasRef(canvas);
     };
-    // img.setAttribute('crossOrigin', 'anonymous'); 
+   
     img.src = require("./log.png");
     
     
+
     // Replace with the actual path to your image
 
     function drawContent() {
       // Styles for text drawing
+      ctx.font = "italic bold 0.8rem Arial";
+      ctx.fillStyle = "GRAY";
+      ctx.fillText(`ID:${_id}`, 600, 20);
       ctx.font = "20px Arial";
       ctx.fillStyle = "#1DA1F2";
       ctx.fillText("byte", canvas.width - 77, 50);
@@ -108,12 +110,27 @@ const CertificateCanvas = ({ data,props }) => {
         canvas.height - 100
       );
       ctx.font = "15px Arial";
-      ctx.fillStyle = "orange";
+      ctx.fillStyle = "#F26E1C";
       ctx.fillText(
         "Date of Achievement",
         canvas.width - 470,
         canvas.height - 80
       );
+      // ctx.drawImage(img, canvas.width - 170, canvas.height - 150, 50, 40);
+      //   ctx.font = "15px Arial";
+      //   ctx.fillStyle = "black";
+      //   ctx.fillText(
+      //     "Karun Tadepalli",
+      //     canvas.width - 200,
+      //     canvas.height - 100
+      //   );
+      //   ctx.font = "italic 15px Arial";
+      //   ctx.fillStyle = "#F26E1C";
+      //   ctx.fillText(
+      //     "CEO & Co-founder",
+      //     canvas.width - 210,
+      //     canvas.height - 80
+      //   );
 
       // Draw the image
       const img = new Image();
@@ -127,22 +144,17 @@ const CertificateCanvas = ({ data,props }) => {
           canvas.height - 100
         );
         ctx.font = "italic 15px Arial";
-        ctx.fillStyle = "orange";
+        ctx.fillStyle = "#F26E1C";
         ctx.fillText(
           "CEO & Co-founder",
           canvas.width - 210,
           canvas.height - 80
         );
       };
-      img.src =
-        "https://ankit-123.my.canva.site/098/images/219f937dae02a117e97806b886894bfd.png"; // Replace with the actual path to your image
+      img.src =require("./sign.webp") // Replace with the actual path to your image
     }
+  }, [handleCanvasRef]);
 
-    // console.log("asdad:",canvas.toDataURL("image/png"))
-    
-  }, [name,type,course]);
-
-  // console.log("a", a);
 
   return (
     <div style={{ display: "flex", flexDirection: "column" }}>
@@ -152,11 +164,6 @@ const CertificateCanvas = ({ data,props }) => {
         height="560"
         style={{ border: "1px solid #000" }}
       ></canvas>
-
-      
-      {/* <div>
-        <img src={a} alt="sda" />
-      </div> */}
     </div>
   );
 };

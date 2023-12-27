@@ -30,6 +30,7 @@ const Frontpage = () => {
   const [type, setType] = useState("");
   const [course, setCourse] = useState("");
   const [linkedin, setLinkedin] = useState("");
+  const [tag,setTag]=useState("")
   const navigate=useNavigate()
   
 
@@ -41,7 +42,7 @@ const Frontpage = () => {
       name:name,type:type,course:course,linkedin:linkedin
     }
 
-    // Update the Open Graph meta tags dynamically
+    
     const ogTitle = document.getElementById('meta-og-title');
     const ogImage = document.getElementById('meta-og-image');
     const ogUrl = document.getElementById('meta-og-url');
@@ -49,15 +50,16 @@ const Frontpage = () => {
     ogTitle.setAttribute('content', `ByteXL ${type} Certificate`);
     ogImage.setAttribute('content', `URL_of_the_certificate_image`);
     ogUrl.setAttribute('content', `URL_of_the_certificate_page`);
-    // console.log("obj:",obj)
-    fetch("https://serverbyte.onrender.com/save",{
+   
+    fetch("http://localhost:1200/save",{
       method:"POST",
       body:JSON.stringify(obj),
       headers:{
         "Content-Type":"application/json"
       }
     }).then(res=>res.json()).then(res=>{
-      console.log(res)
+      // console.log(res)
+      setTag(`${name}_${type}`)
       setTimeout(()=>{
         navigate(`/display/${res.data._id}`)
       },3000)
@@ -69,11 +71,11 @@ const Frontpage = () => {
     <div>
       <h1>form page</h1>
       <Helmet>
-          {/* Update meta tags, titles, and other head elements here */}
-          <title>Your Page Title</title>
+          
+          <title>{`${tag}`}</title>
           <meta name="description" content="Description of your page" />
           <meta property="og:title" content={`ByteXL ${type} Certificate`} />
-          {/* Add more meta tags as needed */}
+          
         </Helmet>
       <div>
         Name:{" "}
@@ -95,12 +97,6 @@ const Frontpage = () => {
       </div>
       <div>
         Course:{" "}
-        {/* <input
-          type="text"
-          placeholder="Enter course in which students enrolled"
-          value={course}
-          onChange={(e) => setCourse(e.target.value)}
-        /> */}
         <select id="topicSelect" value={course} onChange={handleTopicChange}>
         <option value="">Select a topic</option>
         {topicsData.map((topicObj) => (
