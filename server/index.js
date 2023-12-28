@@ -5,7 +5,6 @@ const app = express();
 require("dotenv").config();
 const { RankModel } = require("./models/hacker.models");
 const path = require("path");
-// const { Buffer } = require('buffer');
 const cloudinary = require('cloudinary').v2;
 
 // LOAD ENVIROMENT VARIABLES
@@ -70,22 +69,10 @@ app.get("/get/:id", async (req, res) => {
 
 
 app.patch("/update/:id", async (req, res) => {
-  // console.log("Request Session:", req.session);
+  
   const { id } = req.params;
-  // const { imageUrl } = req.body;
+  
   const { img } = req.body;
-  console.log("img:",img)
-  // Older code
-  // try {
-  //   // Update the database with the imageUrl
-  //   await RankModel.findByIdAndUpdate(id, { imageUrl });
-  //   res.send({ success: true, message: "Database updated successfully.","data":imageUrl });
-  // } catch (error) {
-  //   console.error("Error updating database:", error);
-  //   res.status(500).json({ success: false, message: "Internal server error." });
-  // }
-
- // Older code
 
   //New code for cloudinary
   try {
@@ -99,10 +86,10 @@ app.patch("/update/:id", async (req, res) => {
     // UPLOAD IMAGE TO CLOUDINARY
     const response = await cloudinary.uploader.upload(img, options);
     // RETURN UPLOADED IMAGE DATA
-    const uploadedImage = response.url; // You can then store the image url in your database
-    console.log("uploadedImage:",uploadedImage)
+    const uploadedImage = response.url; 
+    
     await RankModel.findByIdAndUpdate(id, { img:uploadedImage })
-    // res.send({ success: true, message: "Database updated successfully.","data":img });
+    
     // RETURN COMPLETE RESPONSE
     return res.status(200).json({ uploadedImage, response });
     // CATCH ERROR
@@ -118,21 +105,15 @@ app.patch("/update/:id", async (req, res) => {
 
 // Express route to get an image by its ID
 app.get('/images/:id', async (req, res) => {
-  console.log("req.params.id:",req.params.id)
   try {
     const image = await RankModel.findById(req.params.id);
 
     if (!image) {
       return res.status(404).json({ error: 'Image not found' });
     }
-    console.log("image.img:",image.img)
-
-    // Encode the image data to Base64
-    // const encodedImage = Buffer.from(image.img).toString('base64');
-    // Return the image URL or other necessary information
     res.json({ imageUrl: image.img });
   } catch (error) {
-    console.error(error);
+    
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });

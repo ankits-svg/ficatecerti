@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import imagemin from 'imagemin';
-// import imageminPngquant from 'imagemin-pngquant';
 
 
 const CertificateCanvas = ({ data, handleCanvasRef }) => {
@@ -10,14 +8,12 @@ const CertificateCanvas = ({ data, handleCanvasRef }) => {
   useEffect(() => {
     const canvas = document.getElementById("myCanvas");
     const ctx = canvas.getContext("2d");
+    // ctx.strokeStyle = "red";
     ctx.strokeRect(0, 0, canvas.width, canvas.height);
-
-    // Load and draw image to fit the canvas
+    // console.log(canvas.width,canvas.height)
     const img = new Image();
-    // img.setAttribute('crossorigin', 'anonymous');
     img.crossOrigin = "anonymous";
     img.onload = function () {
-      // Calculate the scale factor to fit the image within the canvas
       const scaleFactor = Math.min(
         canvas.width / img.width,
         canvas.height / img.height
@@ -36,69 +32,80 @@ const CertificateCanvas = ({ data, handleCanvasRef }) => {
 
       drawContent();
       
+      localStorage.setItem("certificate-image",canvas.toDataURL("image/png"));
 
-      try {
+      // try {
 
-        localStorage.setItem(
-          "certificate-image",
-          canvas.toDataURL("image/png")
-        );
-      } catch (err) {
-        console.error(`Error saving image to localStorage: ${err}`);
-      }
+      //   localStorage.setItem("certificate-image",canvas.toDataURL("image/png"));
+      // } catch (err) {
+      //   console.error(`Error saving image to localStorage: ${err}`);
+      // }
 
 
       handleCanvasRef(canvas);
     };
    
     img.src = require("./log.png");
-    
+
+    const sign = new Image();
+    sign.src =require("./sign.webp")
     
 
-    // Replace with the actual path to your image
+    function truncateText(text, limit = 3) {
+      const words = text.split(' ');
+      if (words.length <= limit) {
+        return text;
+      }
+      return words.slice(0, limit).join(' ') + '...';
+    }
 
     function drawContent() {
-      // Styles for text drawing
+      
       ctx.font = "italic bold 0.8rem Arial";
       ctx.fillStyle = "GRAY";
-      ctx.fillText(`ID:${_id}`, 600, 20);
-      ctx.font = "20px Arial";
+      ctx.fillText(`ID:${_id}`, 580, 20);
+      ctx.font = "bold 20px Arial";
       ctx.fillStyle = "#1DA1F2";
-      ctx.fillText("byte", canvas.width - 77, 50);
-      ctx.font = "20px Arial";
-      ctx.fillStyle = "red";
-      ctx.fillText("XL", canvas.width - 40, 50);
-      // Draw your HTML content onto the canvas
-      ctx.textAlign = "end";
-      // ctx.fillText("byte", canvas.width - 50, 50);
-      ctx.font = "bold 4rem Arial";
-      ctx.fillStyle = "#1DA1F2";
-      ctx.fillText("Certificate", canvas.width - 120, 120);
-      ctx.font = "bold 2rem Arial";
+      ctx.fillText("byte", canvas.width - 87, 50);
+      ctx.font = "bold 20px Arial";
       ctx.fillStyle = "#F26E1C";
-      ctx.fillText("of", canvas.width - 250, 160);
+      ctx.fillText("XL", canvas.width - 47, 50);
+
+      ctx.textAlign = "center"; 
+      ctx.font = "bold 4rem Arial"; 
+      ctx.fillStyle = "#F26E1C";
+      ctx.fillText("Certificate", 1070/2, 120);
+
+      //of
+      ctx.font = "bold 2rem Arial";
       ctx.fillStyle = "#1DA1F2";
-      ctx.fillText(`${type}`, canvas.width - 160, 200);
+      ctx.fillText("of", 1070/2, 160);
+
+      //type
+      ctx.fillStyle = "#F26E1C";
+      ctx.fillText(truncateText(`${type}`,3), 1070/2 , 200);
+
+
       ctx.font = "20px Arial";
       ctx.fillStyle = "black";
-      ctx.fillText("This is to certify that", canvas.width - 170, 240);
-      ctx.font = "bold auto Arial";
-      ctx.fillStyle = "#F26E1C";
-      ctx.fillText(`${name}`, canvas.width - 210, 300);
+      ctx.fillText("This is to certify that", 1070/2, 240);
+      ctx.font = "50px auto Arial";
+      ctx.fillStyle = "#1DA1F2";
+      ctx.fillText(truncateText(`${name}`,2), 1070/2, 300);
       ctx.font = "20px Arial";
       ctx.fillStyle = "black";
       ctx.fillText(
         "has successfully cleared the assessment for the skill",
-        canvas.width - 30,
+        1070/2,
         340
       );
       ctx.font = "italic bold 1.42rem Arial";
       ctx.fillStyle = "#F26E1C";
-      ctx.fillText(`${course}`, 660, 380);
+      ctx.fillText(truncateText(`${course}`,3), 1070/2, 380);
 
       // Draw footer
       ctx.textAlign = "start";
-      ctx.font = "15px Arial";
+      ctx.font = "bold 15px Arial";
       ctx.fillStyle = "black";
       ctx.fillText(
         new Date().toLocaleDateString("en-US", {
@@ -109,49 +116,50 @@ const CertificateCanvas = ({ data, handleCanvasRef }) => {
         350,
         canvas.height - 100
       );
-      ctx.font = "15px Arial";
+      ctx.font = "bold 15px Arial";
       ctx.fillStyle = "#F26E1C";
       ctx.fillText(
         "Date of Achievement",
         canvas.width - 470,
         canvas.height - 80
       );
-      // ctx.drawImage(img, canvas.width - 170, canvas.height - 150, 50, 40);
-      //   ctx.font = "15px Arial";
-      //   ctx.fillStyle = "black";
-      //   ctx.fillText(
-      //     "Karun Tadepalli",
-      //     canvas.width - 200,
-      //     canvas.height - 100
-      //   );
-      //   ctx.font = "italic 15px Arial";
-      //   ctx.fillStyle = "#F26E1C";
-      //   ctx.fillText(
-      //     "CEO & Co-founder",
-      //     canvas.width - 210,
-      //     canvas.height - 80
-      //   );
 
-      // Draw the image
-      const img = new Image();
-      img.onload = function () {
-        ctx.drawImage(img, canvas.width - 170, canvas.height - 150, 50, 40);
-        ctx.font = "15px Arial";
+      ctx.font = "bold 15px Arial";
         ctx.fillStyle = "black";
         ctx.fillText(
           "Karun Tadepalli",
           canvas.width - 200,
           canvas.height - 100
         );
-        ctx.font = "italic 15px Arial";
+        ctx.font = "bold 15px Arial";
         ctx.fillStyle = "#F26E1C";
         ctx.fillText(
           "CEO & Co-founder",
           canvas.width - 210,
           canvas.height - 80
         );
-      };
-      img.src =require("./sign.webp") // Replace with the actual path to your image
+      
+
+      // Draw the image
+      // const sign = new Image();
+      // sign.onload = function () {
+      //   ctx.drawImage(sign, canvas.width - 170, canvas.height - 150, 50, 40);
+      //   ctx.font = "bold 15px Arial";
+      //   ctx.fillStyle = "black";
+      //   ctx.fillText(
+      //     "Karun Tadepalli",
+      //     canvas.width - 200,
+      //     canvas.height - 100
+      //   );
+      //   ctx.font = "bold 15px Arial";
+      //   ctx.fillStyle = "#F26E1C";
+      //   ctx.fillText(
+      //     "CEO & Co-founder",
+      //     canvas.width - 210,
+      //     canvas.height - 80
+      //   );
+      // };
+      // sign.src =require("./sign.webp")
     }
   }, [handleCanvasRef]);
 
