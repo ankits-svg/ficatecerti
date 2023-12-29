@@ -74,15 +74,18 @@ app.patch("/update/:id", async (req, res) => {
   
   const { img } = req.body;
 
+  const rank = await RankModel.findById(id);
+  console.log(rank)
   //New code for cloudinary
   try {
     // DEFINE UPLOAD OPTIONS
     const options = {
       public_id: `${id}`,
-      folder: 'Certificates',
+      folder: `${rank.course}`,
       unique_filename: true,
       use_filename: true,
     };
+    // console.log("options:",options)
     // UPLOAD IMAGE TO CLOUDINARY
     const response = await cloudinary.uploader.upload(img, options);
     // RETURN UPLOADED IMAGE DATA
