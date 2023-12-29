@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import "../Components/Display.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { Helmet } from "react-helmet";
 import CertificateCanvas from "./CertificateCanvas";
 import {
   Button,
@@ -130,7 +129,7 @@ let topicsData = [
 const DisplayPage = () => {
   const [data, setData] = useState({});
   const { id } = useParams();
-  const [url, setUrl] = useState(`https://serverbyte.onrender.com/get/${id}`);
+  const [url, setUrl] = useState(`http://localhost:1200/get/${id}`);
   const inputRef = useRef(null);
   const currentUrl = window.location.href;
   const [body, setBody] = useState("");
@@ -179,7 +178,7 @@ const DisplayPage = () => {
 
   useEffect(() => {
     // const img = localStorage.getItem("certificate-image");
-    // fetch(`https://serverbyte.onrender.com/update/${id}`, {
+    // fetch(`http://localhost:1200/update/${id}`, {
     //   method: "PATCH",
     //   headers: {
     //     "Content-Type": "application/json",
@@ -198,7 +197,7 @@ const DisplayPage = () => {
     const updateImage = async () => {
       try {
         const img = localStorage.getItem("certificate-image");
-        const res = await fetch(`https://serverbyte.onrender.com/update/${id}`, {
+        const res = await fetch(`http://localhost:1200/update/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -243,14 +242,16 @@ const DisplayPage = () => {
     const encodedTweetText = encodeURIComponent(tweetText);
 
     window.open(`https://twitter.com/intent/tweet?text=${encodedTweetText}`);
-    window.location.reload();
+    setTimeout(() => {
+      window.location.reload();
+    }, 5000);
   };
 
   const handleLinkedin = () => {
     // window.location.reload()
     const imageId = id;
 
-    fetch(`https://serverbyte.onrender.com/images/${imageId}`)
+    fetch(`http://localhost:1200/images/${imageId}`)
       .then((res) => res.json())
       .then((res) => {
         const imageUrl = res.imageUrl;
@@ -308,6 +309,7 @@ const DisplayPage = () => {
 
   return (
     <Box className="containerStyle">
+      
       <Box>
         <Button onClick={handleBackClick} mb="4">
           Back
