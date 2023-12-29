@@ -129,7 +129,7 @@ let topicsData = [
 const DisplayPage = () => {
   const [data, setData] = useState({});
   const { id } = useParams();
-  const [url, setUrl] = useState(`http://localhost:1200/get/${id}`);
+  const [url, setUrl] = useState(`https://seri-knsj.onrender.com/get/${id}`);
   const inputRef = useRef(null);
   const currentUrl = window.location.href;
   const [body, setBody] = useState("");
@@ -178,7 +178,7 @@ const DisplayPage = () => {
 
   useEffect(() => {
     // const img = localStorage.getItem("certificate-image");
-    // fetch(`http://localhost:1200/update/${id}`, {
+    // fetch(`https://seri-knsj.onrender.com/update/${id}`, {
     //   method: "PATCH",
     //   headers: {
     //     "Content-Type": "application/json",
@@ -197,7 +197,7 @@ const DisplayPage = () => {
     const updateImage = async () => {
       try {
         const img = localStorage.getItem("certificate-image");
-        const res = await fetch(`http://localhost:1200/update/${id}`, {
+        const res = await fetch(`https://seri-knsj.onrender.com/update/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -251,7 +251,7 @@ const DisplayPage = () => {
     // window.location.reload()
     const imageId = id;
 
-    fetch(`http://localhost:1200/images/${imageId}`)
+    fetch(`https://seri-knsj.onrender.com/images/${imageId}`)
       .then((res) => res.json())
       .then((res) => {
         const imageUrl = res.imageUrl;
@@ -310,7 +310,7 @@ const DisplayPage = () => {
   return (
     <Box className="containerStyle">
       
-      <Box>
+      <Box w={{ base: "29%", lg: "100%" }}>
         <Button onClick={handleBackClick} mb="4">
           Back
         </Button>
@@ -321,11 +321,11 @@ const DisplayPage = () => {
         mb={"5"}
         className="certificatename"
       >
-        <Heading fontSize={{ base: "xl", md: "2xl", lg: "3xl" }}>
+        <Heading fontSize={{ base: "s", md: "2xl", lg: "3xl" }} whiteSpace={'wrap'} ml={{ base: "2", lg: "4%" }}>
           {data.course} Certificate
         </Heading>
       </Box>
-      <hr />
+      <hr width={"29%"}/>
       <br />
 
       {/* Certificate and Share certificate content in column format */}
@@ -333,6 +333,7 @@ const DisplayPage = () => {
         display="flex"
         flexDirection={{ base: "column", lg: "row" }}
         mt={{ base: 5, lg: 5 }}
+        w={'29%'}
       >
         {/* column 1st */}
         <Box
@@ -393,7 +394,7 @@ const DisplayPage = () => {
               onClick={handleCopyClick}
               bg={"skyblue"}
               color={"white"}
-              width={{ base: "10%", lg: "30%" }}
+              width={{ base: "20%", lg: "30%" }}
             >
               {isCopied ? "Copied!" : "Copy"}
             </Button>
@@ -404,11 +405,11 @@ const DisplayPage = () => {
             onClick={handleDownload}
             mb="4"
             rightIcon={<MdDownload />}
-            width={{ base: "20%", lg: "auto" }}
+            width={{ base: "35%", lg: "auto" }}
           >
             Download
           </Button>
-          <Box mt={{ base: "5%", lg: "0" }} ml={{ base: "0", lg: "4%" }}>
+          <Box mt={{ base: "5%", lg: "0" }} ml={{ base: "2", lg: "4%" }}>
             <Text
               textAlign={"start"}
               fontSize={{ base: "md", lg: "lg" }}
@@ -438,7 +439,7 @@ const DisplayPage = () => {
             as="h1"
             fontSize={"20px"}
             textAlign={{ base: "start", lg: "start" }}
-            ml={{ base: "0", lg: "0" }}
+            ml={{ base: "2", lg: "4%" }}
           >
             {data.name}'s ByteXL Certificate
           </Heading>
@@ -446,8 +447,9 @@ const DisplayPage = () => {
         <Box
           borderRadius={{ base: "0", lg: "4" }}
           border={{ base: "2px solid #EBEBEC", lg: "2px solid #EBEBEC" }}
-          w="100%"
-          h="90%"
+          w={{ base: "27%", lg: "90%" }}
+          ml={{ base: "2", lg: "4%" }}
+          h={{ base: "70%", lg: "90%" }}
           p="15px"
         >
           <Box
@@ -456,13 +458,13 @@ const DisplayPage = () => {
             borderRadius={"4"}
             display={"flex"}
             flexDirection={"column"}
-            w={{ base: "40%", lg: "30%" }}
+            w={{ base: "70%", lg: "30%" }}
             h={"100%"}
             bg={"#F26E1C"}
             color={"white"}
             p={"20px"}
           >
-            <Box w={"30%"} h={"90%"}>
+            <Box w={{ base: "60%", lg: "90%" }} h={"70%"}>
               <FiAward size={"60%"} />
             </Box>
             <Box textAlign={"start"} mb={"7"}>
@@ -472,7 +474,7 @@ const DisplayPage = () => {
               <Box>
                 <Heading size={"s"}>Verified</Heading>
               </Box>
-              <Box>
+              <Box w={{ base: "60%", lg: "90%" }}>
                 <PiBookmarks size={"60%"} />
               </Box>
             </Box>

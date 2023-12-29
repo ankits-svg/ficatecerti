@@ -124,7 +124,7 @@ const Frontpage = () => {
     console.log("obj:", obj);
 
     setIsClicked(true);
-    fetch("http://localhost:1200/save", {
+    fetch("https://seri-knsj.onrender.com/save", {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {
