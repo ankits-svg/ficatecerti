@@ -147,18 +147,6 @@ const DisplayPage = () => {
   let newBody;
 
   useEffect(() => {
-    // window.location.reload()
-    // fetch(url)
-    //   .then((res) => res.json())
-    //   .then((res) => {
-    //     setData(res.data);
-    //     newBody = topicsData.find((el) => el.topic === res.data.course);
-    //     setBody(newBody.body);
-    //     setTopic(newBody.topic);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
     const fetchData = async () => {
       try {
         const res = await fetch(url);
@@ -177,23 +165,6 @@ const DisplayPage = () => {
   }, [url, id, currentUrl]);
 
   useEffect(() => {
-    // const img = localStorage.getItem("certificate-image");
-    // fetch(`https://seri-knsj.onrender.com/update/${id}`, {
-    //   method: "PATCH",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ img: img }),
-    // })
-    //   .then((res) => res.json())
-    //   .then((res) => {
-    //     console.log(res);
-    //     setCloud(res.uploadedImage);
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-
     const updateImage = async () => {
       try {
         const img = localStorage.getItem("certificate-image");
@@ -212,7 +183,7 @@ const DisplayPage = () => {
     };
 
     updateImage();
-      // window.location.reload()
+    // window.location.reload()
   }, [id]);
 
   const handleCopyClick = () => {
@@ -290,12 +261,11 @@ const DisplayPage = () => {
   };
 
   const handleImage = () => {
-    
     const imageUrl = `${data.img}`;
 
     // Open the image in a new tab
     window.open(imageUrl, "_blank");
-    window.location.reload()
+    window.location.reload();
   };
 
   const extractFirstWords = (text, numberOfWords) => {
@@ -309,42 +279,62 @@ const DisplayPage = () => {
 
   return (
     <Box className="containerStyle">
-      
-      <Box w={{ base: "29%", lg: "100%" }}>
-        <Button onClick={handleBackClick} mb="4">
+      <Box w={{ base: "100%", lg: "100%" }}>
+        <Button onClick={handleBackClick} mb={{ base: 4, lg: 0 }}>
           Back
         </Button>
       </Box>
+
+    {/* Heading */}
       <Box
-        textAlign={"start"}
+        textAlign={{ base: "start", lg: "start" }}
         color={"black"}
-        mb={"5"}
+        mb={{ base: 5, lg: 5 }}
         className="certificatename"
+        // border={'1px solid black'}
       >
-        <Heading fontSize={{ base: "s", md: "2xl", lg: "3xl" }} whiteSpace={'wrap'} ml={{ base: "2", lg: "4%" }}>
+        <Heading
+          textAlign={{ base: "start", lg: "start" }}
+          fontSize={{ base: "s", md: "2xl", lg: "3xl" }}
+          whiteSpace={{ base: "wrap", lg: "nowrap" }}
+          ml={{ base: "2", lg: "4" }}
+        >
           {data.course} Certificate
         </Heading>
       </Box>
-      <hr width={"29%"}/>
+
+
+
+      <Box
+        as="hr"
+        w={{ base: "100%", lg: "100%" }}
+        borderWidth="1px"
+        borderColor="gray.300"
+        my="2"
+      />
       <br />
 
       {/* Certificate and Share certificate content in column format */}
       <Box
-        display="flex"
+        display={{ base: "flex", lg: "flex" }}
         flexDirection={{ base: "column", lg: "row" }}
         mt={{ base: 5, lg: 5 }}
-        w={'29%'}
+        w={{ base: "100%", lg: "100%" }}
       >
         {/* column 1st */}
         <Box
+          w={{ base: "100%", lg: "100%" }}
+          margin={'auto'}
           flex={{ base: "1", md: "0.8", lg: "0.5" }}
           mb={{ base: "4", lg: "0" }}
           className="canvascertificate"
+          // ml={{ base: "2", lg: "4" }}
         >
           <CertificateCanvas data={data} handleCanvasRef={handleCanvasRef} />
         </Box>
+
         {/* column 2nd */}
-        <Box flex={{ base: "1", lg: "1" }} className="certificateshare">
+        <Box w={"100%"} className="certificateshare">
           <Text
             fontSize={{ base: "xl", md: "xl", lg: "2xl" }}
             fontWeight="bold"
@@ -353,7 +343,11 @@ const DisplayPage = () => {
             Share this Certificate
           </Text>
           <Box mb="4" display="flex" justifyContent={"space-evenly"}>
-            <Box onClick={() => handleFacebook()} cursor="pointer" w={{ base: "7%", lg: "12%" }}>
+            <Box
+              onClick={() => handleFacebook()}
+              cursor="pointer"
+              w={{ base: "7%", lg: "12%" }}
+            >
               <Image
                 margin={"auto"}
                 width="100%"
@@ -361,7 +355,11 @@ const DisplayPage = () => {
                 alt="facebook"
               />
             </Box>
-            <Box onClick={() => handleTwitter()} cursor="pointer" w={{ base: "7%", lg: "12%" }}>
+            <Box
+              onClick={() => handleTwitter()}
+              cursor="pointer"
+              w={{ base: "7%", lg: "12%" }}
+            >
               <Image
                 margin={"auto"}
                 width="100%"
@@ -369,7 +367,11 @@ const DisplayPage = () => {
                 alt="twitter"
               />
             </Box>
-            <Box onClick={() => handleLinkedin()} cursor="pointer" w={{ base: "7%", lg: "12%" }}>
+            <Box
+              onClick={() => handleLinkedin()}
+              cursor="pointer"
+              w={{ base: "7%", lg: "12%" }}
+            >
               <Image
                 margin={"auto"}
                 width="100%"
@@ -447,8 +449,9 @@ const DisplayPage = () => {
         <Box
           borderRadius={{ base: "0", lg: "4" }}
           border={{ base: "2px solid #EBEBEC", lg: "2px solid #EBEBEC" }}
-          w={{ base: "27%", lg: "90%" }}
-          ml={{ base: "2", lg: "4%" }}
+          w={{ base: "100%", lg: "100%" }}
+          margin={'auto'}
+          ml={{ base: "2", lg: "4" }}
           h={{ base: "70%", lg: "90%" }}
           p="15px"
         >
@@ -465,17 +468,17 @@ const DisplayPage = () => {
             p={"20px"}
           >
             <Box w={{ base: "60%", lg: "90%" }} h={"70%"}>
-              <FiAward size={"60%"} />
+              <FiAward size={"50%"} />
             </Box>
-            <Box textAlign={"start"} mb={"7"}>
+            <Box textAlign={"start"} mb={"7"} mt={"-5"}>
               <Text>{extractFirstWords(data.course, 3)}</Text>
             </Box>
-            <Box display={"flex"} justifyContent={"space-between"} mt={"-2"}>
+            <Box display={"flex"} justifyContent={"space-between"} mt={"-7"}>
               <Box>
                 <Heading size={"s"}>Verified</Heading>
               </Box>
-              <Box w={{ base: "60%", lg: "90%" }}>
-                <PiBookmarks size={"60%"} />
+              <Box margin={"end"} w={{ base: "60%", lg: "90%" }}>
+                <PiBookmarks size={"50%"} margin={"end"} />
               </Box>
             </Box>
           </Box>

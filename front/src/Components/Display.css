@@ -1,3 +1,5 @@
+/* styles.css */
+
 .containerStyle {
     /* border: 0.1rem solid red; */
     width: 76rem;
@@ -6,10 +8,25 @@
     justify-content: space-between;
     display: flex;
     flex-direction: column;
-}
+  }
+  
+  @media (max-width: 400px) {
+    .containerStyle {
+      width: 90%;
+      /* Add more styles for mobile screens */
+    }
+  }
+  @media (min-width: 320px) {
+    .containerStyle {
+      width: 90%;
+      min-width: 320px; /* Set your desired minimum width */
+      /* Add more styles for mobile screens */
+    }
+  }
+
 
 .leftDivStyle {
-    border: 0.1rem solid gray;
+    /* border: 0.1rem solid gray; */
     width: auto;
     display:flex;
     flex-direction: row;
