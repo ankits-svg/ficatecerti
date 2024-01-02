@@ -124,6 +124,7 @@ let topicsData = [
   },
 ];
 
+// https://seri-knsj.onrender.com
 //http://localhost:1200
 // https://serverbyte.onrender.com/save
 const DisplayPage = () => {
@@ -138,36 +139,44 @@ const DisplayPage = () => {
   const [canvasRef, setCanvasRef] = useState(null);
   const [cloud, setCloud] = useState(null);
   const [isCopied, setIsCopied] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const date1 = new Date();
+  const showTime1 =
+    date1.getHours() + ":" + date1.getMinutes() + ":" + date1.getSeconds();
 
-  console.log("data:", data);
+  const date2 = new Date();
+  const showTime2 =
+    date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds();
   const handleCanvasRef = (canvas) => {
     setCanvasRef(canvas);
   };
-
-  let newBody;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const res = await fetch(url);
         const data = await res.json();
+        console.log("1st render:", data.data, " ", showTime1);
         setData(data.data);
 
         const newBody = topicsData.find((el) => el.topic === data.data.course);
         setBody(newBody.body);
         setTopic(newBody.topic);
+        console.log("insideuseeffect:",data.data)
+        
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-  }, [url, id, currentUrl]);
+  }, [id]);
 
   useEffect(() => {
+    const img = localStorage.getItem("certificate-image");
     const updateImage = async () => {
       try {
-        const img = localStorage.getItem("certificate-image");
+        
         const res = await fetch(`https://seri-knsj.onrender.com/update/${id}`, {
           method: "PATCH",
           headers: {
@@ -176,6 +185,7 @@ const DisplayPage = () => {
           body: JSON.stringify({ img: img }),
         });
         const data = await res.json();
+        console.log("2nd render:", data.uploadedImage, " ", showTime2);
         setCloud(data.uploadedImage);
       } catch (error) {
         console.error("Error updating image:", error);
@@ -183,7 +193,6 @@ const DisplayPage = () => {
     };
 
     updateImage();
-    // window.location.reload()
   }, [id]);
 
   const handleCopyClick = () => {
@@ -195,46 +204,43 @@ const DisplayPage = () => {
   };
 
   const handleFacebook = () => {
-    console.log("cloud:", cloud);
-    window.open(
-      `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-        cloud
-      )}`
-    );
+    if (cloud) {
+      window.open(
+        `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+          cloud
+        )}`
+      );
+    } else {
+      console.error("No cloud data available.");
+      window.location.reload()
+    }
   };
 
   const handleTwitter = () => {
-    // window.location.reload()
-    const course = `${data.course}`;
-    const cloudinary_url = `${cloud}`;
 
-    const tweetText = `I just earned ${course} skill certificate via @ByteXL. Get your skills certified and show the world what you can do! #skillup, ${cloudinary_url}`;
-
-    const encodedTweetText = encodeURIComponent(tweetText);
-
-    window.open(`https://twitter.com/intent/tweet?text=${encodedTweetText}`);
-    setTimeout(() => {
-      window.location.reload();
-    }, 5000);
+    if (cloud) {
+      const course = `${data.course}`;
+      const cloudinary_url = `${cloud}`;
+      const tweetText = `I just earned ${course} skill certificate via @ByteXL. Get your skills certified and show the world what you can do! #skillup, ${cloudinary_url}`;
+      const encodedTweetText = encodeURIComponent(tweetText);
+      window.open(`https://twitter.com/intent/tweet?text=${encodedTweetText}`);
+    } else {
+      console.error("No cloud data available.");
+      window.location.reload()
+    }
   };
 
   const handleLinkedin = () => {
-    // window.location.reload()
-    const imageId = id;
-
-    fetch(`https://seri-knsj.onrender.com/images/${imageId}`)
-      .then((res) => res.json())
-      .then((res) => {
-        const imageUrl = res.imageUrl;
-
-        const encodedImageUrl = encodeURIComponent(imageUrl);
-        const linkedinShareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedImageUrl}`;
-        window.open(linkedinShareLink, "_blank");
-      })
-      .catch((err) => {
-        console.error("Error fetching image:", err);
-      });
-
+    
+    if (cloud) {
+      // LinkedIn sharing logic
+      const encodedImageUrl = encodeURIComponent(cloud);
+      const linkedinShareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedImageUrl}`;
+      window.open(linkedinShareLink, "_blank");
+    } else {
+      console.error("No cloud data available.");
+      window.location.reload()
+    }
     // window.location.reload()
   };
 
@@ -261,11 +267,10 @@ const DisplayPage = () => {
   };
 
   const handleImage = () => {
-    const imageUrl = `${data.img}`;
-
-    // Open the image in a new tab
-    window.open(imageUrl, "_blank");
-    window.location.reload();
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000); 
   };
 
   const extractFirstWords = (text, numberOfWords) => {
@@ -273,217 +278,244 @@ const DisplayPage = () => {
       const words = text.split(" ");
       return words.slice(0, numberOfWords).join(" ");
     } else {
-      return ""; // or any default value you prefer when text is undefined
+      return ""; 
     }
   };
 
   return (
     <Box className="containerStyle">
+      <Helmet>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta property="twitter:domain" content="bytexl.com" />
+        <meta property="twitter:url" content={currentUrl} />
+        <meta name="twitter:title" content={`${data.course} Skill Certificate`} />
+        <meta name="twitter:description" content={extractFirstWords(data.course, 20)} />
+        <meta name="twitter:image" content={cloud || defaultImageUrl} />
+      </Helmet>
       <Box w={{ base: "100%", lg: "100%" }}>
         <Button onClick={handleBackClick} mb={{ base: 4, lg: 0 }}>
           Back
         </Button>
       </Box>
-
-    {/* Heading */}
-      <Box
-        textAlign={{ base: "start", lg: "start" }}
-        color={"black"}
-        mb={{ base: 5, lg: 5 }}
-        className="certificatename"
-        // border={'1px solid black'}
-      >
-        <Heading
-          textAlign={{ base: "start", lg: "start" }}
-          fontSize={{ base: "s", md: "2xl", lg: "3xl" }}
-          whiteSpace={{ base: "wrap", lg: "nowrap" }}
-          ml={{ base: "2", lg: "4" }}
-        >
-          {data.course} Certificate
-        </Heading>
-      </Box>
-
-
-
-      <Box
-        as="hr"
-        w={{ base: "100%", lg: "100%" }}
-        borderWidth="1px"
-        borderColor="gray.300"
-        my="2"
-      />
-      <br />
-
-      {/* Certificate and Share certificate content in column format */}
-      <Box
-        display={{ base: "flex", lg: "flex" }}
-        flexDirection={{ base: "column", lg: "row" }}
-        mt={{ base: 5, lg: 5 }}
-        w={{ base: "100%", lg: "100%" }}
-      >
-        {/* column 1st */}
-        <Box
-          w={{ base: "100%", lg: "100%" }}
-          margin={'auto'}
-          flex={{ base: "1", md: "0.8", lg: "0.5" }}
-          mb={{ base: "4", lg: "0" }}
-          className="canvascertificate"
-          // ml={{ base: "2", lg: "4" }}
-        >
-          <CertificateCanvas data={data} handleCanvasRef={handleCanvasRef} />
-        </Box>
-
-        {/* column 2nd */}
-        <Box w={"100%"} className="certificateshare">
-          <Text
-            fontSize={{ base: "xl", md: "xl", lg: "2xl" }}
-            fontWeight="bold"
-            mb="4"
-          >
-            Share this Certificate
-          </Text>
-          <Box mb="4" display="flex" justifyContent={"space-evenly"}>
-            <Box
-              onClick={() => handleFacebook()}
-              cursor="pointer"
-              w={{ base: "7%", lg: "12%" }}
-            >
-              <Image
-                margin={"auto"}
-                width="100%"
-                src="https://imgs.search.brave.com/jJCoPasn2serH2FU-dHJQycakDfaNS7AZ2vE_CuAUNg/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA1LzMyLzIwLzAz/LzM2MF9GXzUzMjIw/MDM1NV9vZEtOOU91/M1dCNmlIV0pURklF/bEZ0SmJUdXpKc3BZ/Ni5qcGc"
-                alt="facebook"
-              />
-            </Box>
-            <Box
-              onClick={() => handleTwitter()}
-              cursor="pointer"
-              w={{ base: "7%", lg: "12%" }}
-            >
-              <Image
-                margin={"auto"}
-                width="100%"
-                src="https://hrcdn.net/fcore/assets/social_share/twitter-96e2c898ae.svg"
-                alt="twitter"
-              />
-            </Box>
-            <Box
-              onClick={() => handleLinkedin()}
-              cursor="pointer"
-              w={{ base: "7%", lg: "12%" }}
-            >
-              <Image
-                margin={"auto"}
-                width="100%"
-                src="https://hrcdn.net/fcore/assets/social_share/linkedin-fd4be6309a.svg"
-                alt="linkedin"
-              />
-            </Box>
-          </Box>
+      {data ? (
+        <>
+          {/* Heading */}
           <Box
-            mb="4"
-            className="copyButtonStyle"
-            display={{ base: "flex", lg: "flex" }}
-          >
-            <Input
-              type="text"
-              value={currentUrl}
-              ref={inputRef}
-              readOnly
-              width={{ base: "70%", lg: "70%" }}
-            />
-            <Button
-              onClick={handleCopyClick}
-              bg={"skyblue"}
-              color={"white"}
-              width={{ base: "20%", lg: "30%" }}
-            >
-              {isCopied ? "Copied!" : "Copy"}
-            </Button>
-          </Box>
-          <Button
-            bg={"teal"}
-            color={"white"}
-            onClick={handleDownload}
-            mb="4"
-            rightIcon={<MdDownload />}
-            width={{ base: "35%", lg: "auto" }}
-          >
-            Download
-          </Button>
-          <Box mt={{ base: "5%", lg: "0" }} ml={{ base: "2", lg: "4%" }}>
-            <Text
-              textAlign={"start"}
-              fontSize={{ base: "md", lg: "lg" }}
-              mb="2"
-              color={"gray"}
-              fontWeight={"bold"}
-            >
-              {topic}
-            </Text>
-            <Text color={"gray"} textAlign={"start"}>
-              {body}
-            </Text>
-          </Box>
-        </Box>
-      </Box>
-
-      {/* Bottom row */}
-      <Box
-        w={{ base: "100%", lg: "67%" }}
-        h={{ base: "20rem", lg: "15rem" }}
-        mt={{ base: "0", lg: 0 }}
-        className="imagebottom"
-      >
-        <Box w={{ base: "90%", lg: "51%" }} mt={"10"} mb={"10"}>
-          <Heading
-            whiteSpace="nowrap"
-            as="h1"
-            fontSize={"20px"}
             textAlign={{ base: "start", lg: "start" }}
-            ml={{ base: "2", lg: "4%" }}
+            color={"black"}
+            mb={{ base: 5, lg: 5 }}
+            className="certificatename"
           >
-            {data.name}'s ByteXL Certificate
-          </Heading>
-        </Box>
-        <Box
-          borderRadius={{ base: "0", lg: "4" }}
-          border={{ base: "2px solid #EBEBEC", lg: "2px solid #EBEBEC" }}
-          w={{ base: "100%", lg: "100%" }}
-          margin={'auto'}
-          ml={{ base: "2", lg: "4" }}
-          h={{ base: "70%", lg: "90%" }}
-          p="15px"
-        >
+            <Heading
+              textAlign={{ base: "start", lg: "start" }}
+              fontSize={{ base: "s", md: "2xl", lg: "3xl" }}
+              whiteSpace={{ base: "wrap", lg: "nowrap" }}
+              ml={{ base: "2", lg: "4" }}
+            >
+              {data.course} Certificate
+            </Heading>
+          </Box>
+
           <Box
-            onClick={() => handleImage()}
-            cursor={"pointer"}
-            borderRadius={"4"}
-            display={"flex"}
-            flexDirection={"column"}
-            w={{ base: "70%", lg: "30%" }}
-            h={"100%"}
-            bg={"#F26E1C"}
-            color={"white"}
-            p={"20px"}
+            as="hr"
+            w={{ base: "100%", lg: "100%" }}
+            borderWidth="1px"
+            borderColor="gray.300"
+            my="2"
+          />
+          <br />
+
+          {/* Certificate and Share certificate content in column format */}
+          <Box
+            display={{ base: "flex", lg: "flex" }}
+            flexDirection={{ base: "column", lg: "row" }}
+            mt={{ base: 5, lg: 5 }}
+            w={{ base: "100%", lg: "100%" }}
+            justifyContent={"space-between"}
           >
-            <Box w={{ base: "60%", lg: "90%" }} h={"70%"}>
-              <FiAward size={"50%"} />
+            {/* column 1st */}
+            <Box
+              w={{ base: "100%", lg: "100%" }}
+              margin={"auto"}
+              flex={{ base: "1", md: "0.8", lg: "0.5" }}
+              mb={{ base: "4", lg: "0" }}
+              className="canvascertificate"
+            >
+              <CertificateCanvas
+                data={data}
+                handleCanvasRef={handleCanvasRef}
+              />
             </Box>
-            <Box textAlign={"start"} mb={"7"} mt={"-5"}>
-              <Text>{extractFirstWords(data.course, 3)}</Text>
-            </Box>
-            <Box display={"flex"} justifyContent={"space-between"} mt={"-7"}>
-              <Box>
-                <Heading size={"s"}>Verified</Heading>
+
+            {/* column 2nd */}
+            <Box w={{ base: "100%", lg: "30%" }} className="certificateshare">
+              <Text
+                fontSize={{ base: "xl", md: "xl", lg: "3xl" }}
+                fontWeight="bold"
+                mb="4"
+                textAlign={{ base: "center", lg: "start" }}
+              >
+                Share this Certificate
+              </Text>
+              <Box
+                // border={"2px solid red"}
+                m={{ base: "", lg: "auto" }}
+                w={{ base: "100%", lg: "50%" }}
+                mb={{ base: "5%", lg: "10%" }}
+                ml={{ base: "", lg: "-1" }}
+                display="flex"
+                justifyContent={{ base: "space-around", lg: "space-around" }}
+              >
+                <Box
+                  onClick={() => handleFacebook()}
+                  cursor="pointer"
+                  w={{ base: "7%", lg: "17%" }}
+                  // border={"2px solid red"}
+                >
+                  <Image
+                    margin={"auto"}
+                    width="100%"
+                    src="https://imgs.search.brave.com/jJCoPasn2serH2FU-dHJQycakDfaNS7AZ2vE_CuAUNg/rs:fit:860:0:0/g:ce/aHR0cHM6Ly90NC5m/dGNkbi5uZXQvanBn/LzA1LzMyLzIwLzAz/LzM2MF9GXzUzMjIw/MDM1NV9vZEtOOU91/M1dCNmlIV0pURklF/bEZ0SmJUdXpKc3BZ/Ni5qcGc"
+                    alt="facebook"
+                  />
+                </Box>
+                <Box
+                  onClick={() => handleTwitter()}
+                  cursor="pointer"
+                  w={{ base: "7%", lg: "17%" }}
+                >
+                  <Image
+                    margin={"auto"}
+                    width="100%"
+                    src="https://hrcdn.net/fcore/assets/social_share/twitter-96e2c898ae.svg"
+                    alt="twitter"
+                  />
+                </Box>
+                <Box
+                  onClick={() => handleLinkedin()}
+                  cursor="pointer"
+                  w={{ base: "7%", lg: "17%" }}
+                >
+                  <Image
+                    margin={"auto"}
+                    width="100%"
+                    src="https://hrcdn.net/fcore/assets/social_share/linkedin-fd4be6309a.svg"
+                    alt="linkedin"
+                  />
+                </Box>
               </Box>
-              <Box margin={"end"} w={{ base: "60%", lg: "90%" }}>
-                <PiBookmarks size={"50%"} margin={"end"} />
+              <Box
+                mb="4"
+                className="copyButtonStyle"
+                display={{ base: "flex", lg: "flex" }}
+              >
+                <Input
+                  type="text"
+                  value={currentUrl}
+                  ref={inputRef}
+                  readOnly
+                  width={{ base: "70%", lg: "50%" }}
+                />
+                <Button
+                  onClick={handleCopyClick}
+                  bg={"skyblue"}
+                  color={"white"}
+                  width={{ base: "20%", lg: "20%" }}
+                >
+                  {isCopied ? "Copied!" : "Copy"}
+                </Button>
+              </Box>
+              <Button
+                bg={"teal"}
+                color={"white"}
+                onClick={handleDownload}
+                mb="4"
+                rightIcon={<MdDownload />}
+                width={{ base: "35%", lg: "auto" }}
+              >
+                Download
+              </Button>
+              <Box mt={{ base: "5%", lg: "0" }} ml={{ base: "2", lg: "4%" }}>
+                <Text
+                  textAlign={"start"}
+                  fontSize={{ base: "md", lg: "lg" }}
+                  mb="2"
+                  color={"gray"}
+                  fontWeight={"bold"}
+                >
+                  {topic}
+                </Text>
+                <Text color={"gray"} textAlign={"start"}>
+                  {body}
+                </Text>
               </Box>
             </Box>
           </Box>
-        </Box>
-      </Box>
+
+          {/* Bottom row */}
+          <Box
+            w={{ base: "100%", lg: "67%" }}
+            h={{ base: "20rem", lg: "15rem" }}
+            mt={{ base: "0", lg: 0 }}
+            className="imagebottom"
+          >
+            <Box w={{ base: "90%", lg: "51%" }} mt={"10"} mb={"10"}>
+              <Heading
+                whiteSpace="nowrap"
+                as="h1"
+                fontSize={"20px"}
+                textAlign={{ base: "start", lg: "start" }}
+                ml={{ base: "2", lg: "4%" }}
+              >
+                {data.name}'s ByteXL Certificate
+              </Heading>
+            </Box>
+            <Box
+              borderRadius={{ base: "0", lg: "4" }}
+              border={{ base: "2px solid #EBEBEC", lg: "2px solid #EBEBEC" }}
+              w={{ base: "100%", lg: "100%" }}
+              margin={"auto"}
+              ml={{ base: "2", lg: "4" }}
+              h={{ base: "70%", lg: "90%" }}
+              p="15px"
+            >
+              <Box
+                onClick={() => handleImage()}
+                cursor={"pointer"}
+                borderRadius={"4"}
+                display={"flex"}
+                flexDirection={"column"}
+                w={{ base: "70%", lg: "30%" }}
+                h={"100%"}
+                bg={"#F26E1C"}
+                color={"white"}
+                p={"20px"}
+              >
+                <Box w={{ base: "60%", lg: "90%" }} h={"70%"}>
+                  <FiAward size={"50%"} />
+                </Box>
+                <Box textAlign={"start"} mb={"7"} mt={"-5"}>
+                  <Text>{extractFirstWords(data.course, 3)}</Text>
+                </Box>
+                <Box
+                  display={"flex"}
+                  justifyContent={"space-between"}
+                  mt={"-7"}
+                >
+                  <Box>
+                    <Heading size={"s"}>Verified</Heading>
+                  </Box>
+                  <Box margin={"end"} w={{ base: "60%", lg: "90%" }}>
+                    <PiBookmarks size={"50%"} margin={"end"} />
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          </Box>
+        </>
+      ) : (
+        <Box>{isLoading && <Box>...Loading</Box>}</Box>
+      )}
     </Box>
   );
 };

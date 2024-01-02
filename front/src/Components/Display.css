@@ -2,7 +2,7 @@
 
 .containerStyle {
     /* border: 0.1rem solid red; */
-    width: 76rem;
+    width: 86%;
     margin: auto;
     margin-top: 2rem;
     justify-content: space-between;
@@ -10,16 +10,17 @@
     flex-direction: column;
   }
   
-  @media (max-width: 400px) {
+  @media (max-width: 425px) {
     .containerStyle {
       width: 90%;
-      /* Add more styles for mobile screens */
+      /* Add more styles for screens up to 400px wide */
     }
   }
   @media (min-width: 320px) {
     .containerStyle {
-      width: 90%;
-      min-width: 320px; /* Set your desired minimum width */
+        width: 90%;
+      /* width: 76rem; */
+      min-width: 320px;
       /* Add more styles for mobile screens */
     }
   }

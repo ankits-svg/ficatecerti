@@ -121,7 +121,7 @@ const Frontpage = () => {
       course: course,
       linkedin: linkedin,
     };
-    console.log("obj:", obj);
+    // console.log("obj:", obj);
 
     setIsClicked(true);
     fetch("https://seri-knsj.onrender.com/save", {
