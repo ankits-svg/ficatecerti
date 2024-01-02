@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import "../Components/Display.css";
 import { useNavigate, useParams } from "react-router-dom";
 import CertificateCanvas from "./CertificateCanvas";
+import { Helmet } from "react-helmet-async";
+
 import {
   Button,
   Box,
@@ -140,6 +142,7 @@ const DisplayPage = () => {
   const [cloud, setCloud] = useState(null);
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [img,setImg]=useState(localStorage.getItem("certificate-image")||[])
   const date1 = new Date();
   const showTime1 =
     date1.getHours() + ":" + date1.getMinutes() + ":" + date1.getSeconds();
@@ -173,7 +176,8 @@ const DisplayPage = () => {
   }, [id]);
 
   useEffect(() => {
-    const img = localStorage.getItem("certificate-image");
+    // const img = localStorage.getItem("certificate-image");
+    console.log("getting image from localstorage:",img)
     const updateImage = async () => {
       try {
         
@@ -186,6 +190,7 @@ const DisplayPage = () => {
         });
         const data = await res.json();
         console.log("2nd render:", data.uploadedImage, " ", showTime2);
+        // localStorage.setItem('url',data.uploadedImage)
         setCloud(data.uploadedImage);
       } catch (error) {
         console.error("Error updating image:", error);
@@ -231,18 +236,25 @@ const DisplayPage = () => {
   };
 
   const handleLinkedin = () => {
-    
+    // let newurl=localStorage.getItem('url')
     if (cloud) {
       // LinkedIn sharing logic
       const encodedImageUrl = encodeURIComponent(cloud);
       const linkedinShareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedImageUrl}`;
+     setTimeout(()=>{
       window.open(linkedinShareLink, "_blank");
+     },1500)
     } else {
       console.error("No cloud data available.");
+      // alert('might be some url is not available')
       window.location.reload()
+      
     }
     // window.location.reload()
   };
+
+
+  
 
   const handleDownload = async () => {
     if (canvasRef) {
@@ -256,6 +268,7 @@ const DisplayPage = () => {
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        // window.location.reload();
       } else {
         console.error("No image data found in localStorage.");
       }
@@ -281,17 +294,19 @@ const DisplayPage = () => {
       return ""; 
     }
   };
-
+  const defaultImageUrl="https://res.cloudinary.com/dv480lgci/image/upload/v1704185713/Angular%20%28JavaScript%20Framework%29/6593cf31cd9562ca2e431996.png"
   return (
     <Box className="containerStyle">
-      <Helmet>
+    
+      {/* <Helmet>
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="bytexl.com" />
         <meta property="twitter:url" content={currentUrl} />
         <meta name="twitter:title" content={`${data.course} Skill Certificate`} />
         <meta name="twitter:description" content={extractFirstWords(data.course, 20)} />
         <meta name="twitter:image" content={cloud || defaultImageUrl} />
-      </Helmet>
+      </Helmet> */}
+      
       <Box w={{ base: "100%", lg: "100%" }}>
         <Button onClick={handleBackClick} mb={{ base: 4, lg: 0 }}>
           Back
