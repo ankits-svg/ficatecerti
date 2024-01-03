@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-// import { Helmet } from "react-helmet";
+import { Helmet } from 'react-helmet-async';
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -143,6 +143,12 @@ const Frontpage = () => {
       });
   };
   return (
+    <>
+    <Helmet>
+        {/* <title>Your Frontpage Title</title> */}
+        <meta property="og:title" content="Your Frontpage OG Title" />
+        {/* Add other OG tags as needed */}
+      </Helmet>
     <Box
       w={"80%"}
       margin={"auto"}
@@ -224,6 +230,7 @@ const Frontpage = () => {
         {isClicked ? "Generating Certificate" : "Generate Certificate"}
       </Button>
     </Box>
+    </>
   );
 };
 

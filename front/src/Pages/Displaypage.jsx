@@ -298,14 +298,14 @@ const DisplayPage = () => {
   return (
     <Box className="containerStyle">
     
-      {/* <Helmet>
+      <Helmet>
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="bytexl.com" />
         <meta property="twitter:url" content={currentUrl} />
         <meta name="twitter:title" content={`${data.course} Skill Certificate`} />
         <meta name="twitter:description" content={extractFirstWords(data.course, 20)} />
         <meta name="twitter:image" content={cloud || defaultImageUrl} />
-      </Helmet> */}
+      </Helmet>
       
       <Box w={{ base: "100%", lg: "100%" }}>
         <Button onClick={handleBackClick} mb={{ base: 4, lg: 0 }}>
