@@ -298,27 +298,20 @@ const DisplayPage = () => {
   return (
     <Box className="containerStyle">
     
-      {/* <Helmet>
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:domain" content="bytexl.com" />
-        <meta property="twitter:url" content={currentUrl} />
-        <meta name="twitter:title" content={`${data.course} Skill Certificate`} />
-        <meta name="twitter:description" content={extractFirstWords(data.course, 20)} />
-        <meta name="twitter:image" content={cloud || defaultImageUrl} />
-      </Helmet> */}
+          <Helmet>
+            {/* ... (your existing meta tags) */}
+            {/* LinkedIn OG tags */}
+            <meta property="og:title" content={`${data.course} Skill Certificate`} />
+            <meta property="og:description" content={extractFirstWords(data.course, 20)} />
+            {/* <meta property="og:image" content={cloud || defaultImageUrl} /> */}
+            <meta name="image" property="og:image" content={cloud}></meta>
+            <meta property="og:url" content={currentUrl} />
+            <meta property="og:type" content="website" />
+            <meta property="og:site_name" content="ByteXL" />
+            <meta name="author" content="Ankitsa"/>
+          </Helmet>
 
-      <Helmet>
-        {/* ... (your existing meta tags) */}
-        {/* LinkedIn OG tags */}
-        <meta property="og:title" content={`${data.course} Skill Certificate`} />
-        <meta property="og:description" content={extractFirstWords(data.course, 20)} />
-        {/* <meta property="og:image" content={cloud || defaultImageUrl} /> */}
-        <meta name="image" property="og:image" content={cloud}></meta>
-        <meta property="og:url" content={currentUrl} />
-        <meta property="og:type" content="website" />
-        <meta property="og:site_name" content="ByteXL" />
-        <meta name="author" content="Ankitsa"/>
-      </Helmet>
+      
       
       <Box w={{ base: "100%", lg: "100%" }}>
         <Button onClick={handleBackClick} mb={{ base: 4, lg: 0 }}>
@@ -327,6 +320,7 @@ const DisplayPage = () => {
       </Box>
       {data ? (
         <>
+            
           {/* Heading */}
           <Box
             textAlign={{ base: "start", lg: "start" }}
