@@ -190,7 +190,7 @@ const DisplayPage = () => {
     }
   };
   
-  console.log(`${data.course} Skill Certificate`,extractFirstWords(data.course, 20), cloud, currentUrl)
+  // console.log(`${data.course} Skill Certificate`,extractFirstWords(data.course, 20), cloud, currentUrl)
   return (
     <>
     <Helmet>
