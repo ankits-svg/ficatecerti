@@ -159,13 +159,13 @@ const DisplayPage = () => {
       try {
         const res = await fetch(url);
         const data = await res.json();
-        console.log("1st render:", data.data, " ", showTime1);
+        // console.log("1st render:", data.data, " ", showTime1);
         setData(data.data);
 
         const newBody = topicsData.find((el) => el.topic === data.data.course);
         setBody(newBody.body);
         setTopic(newBody.topic);
-        console.log("insideuseeffect:",data.data)
+        // console.log("insideuseeffect:",data.data)
         
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -177,7 +177,7 @@ const DisplayPage = () => {
 
   useEffect(() => {
     // const img = localStorage.getItem("certificate-image");
-    console.log("getting image from localstorage:",img)
+    // console.log("getting image from localstorage:",img)
     const updateImage = async () => {
       try {
         
@@ -189,7 +189,7 @@ const DisplayPage = () => {
           body: JSON.stringify({ img: img }),
         });
         const data = await res.json();
-        console.log("2nd render:", data.uploadedImage, " ", showTime2);
+        // console.log("2nd render:", data.uploadedImage, " ", showTime2);
         // localStorage.setItem('url',data.uploadedImage)
         setCloud(data.uploadedImage);
       } catch (error) {
@@ -216,7 +216,7 @@ const DisplayPage = () => {
         )}`
       );
     } else {
-      console.error("No cloud data available.");
+      // console.error("No cloud data available.");
       window.location.reload()
     }
   };
@@ -230,7 +230,7 @@ const DisplayPage = () => {
       const encodedTweetText = encodeURIComponent(tweetText);
       window.open(`https://twitter.com/intent/tweet?text=${encodedTweetText}`);
     } else {
-      console.error("No cloud data available.");
+      // console.error("No cloud data available.");
       window.location.reload()
     }
   };
@@ -243,9 +243,9 @@ const DisplayPage = () => {
       const linkedinShareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedImageUrl}`;
      setTimeout(()=>{
       window.open(linkedinShareLink, "_blank");
-     },1500)
+     },800)
     } else {
-      console.error("No cloud data available.");
+      // console.error("No cloud data available.");
       // alert('might be some url is not available')
       window.location.reload()
       
@@ -298,13 +298,26 @@ const DisplayPage = () => {
   return (
     <Box className="containerStyle">
     
-      <Helmet>
+      {/* <Helmet>
         <meta name="twitter:card" content="summary_large_image" />
         <meta property="twitter:domain" content="bytexl.com" />
         <meta property="twitter:url" content={currentUrl} />
         <meta name="twitter:title" content={`${data.course} Skill Certificate`} />
         <meta name="twitter:description" content={extractFirstWords(data.course, 20)} />
         <meta name="twitter:image" content={cloud || defaultImageUrl} />
+      </Helmet> */}
+
+      <Helmet>
+        {/* ... (your existing meta tags) */}
+        {/* LinkedIn OG tags */}
+        <meta property="og:title" content={`${data.course} Skill Certificate`} />
+        <meta property="og:description" content={extractFirstWords(data.course, 20)} />
+        {/* <meta property="og:image" content={cloud || defaultImageUrl} /> */}
+        <meta name="image" property="og:image" content={cloud}></meta>
+        <meta property="og:url" content={currentUrl} />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="ByteXL" />
+        <meta name="author" content="Ankitsa"/>
       </Helmet>
       
       <Box w={{ base: "100%", lg: "100%" }}>

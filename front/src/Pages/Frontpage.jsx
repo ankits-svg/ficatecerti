@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from 'react-helmet-async';
 import { useNavigate } from "react-router-dom";
 import {
@@ -92,7 +92,10 @@ const Frontpage = () => {
   const [linkedin, setLinkedin] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-
+  // const [ogTitle, setOgTitle] = useState("Default Title");
+  // const [ogDescription, setOgDescription] = useState("Default Description");
+  // const [ogImage, setOgImage] = useState("Default Image URL");
+  // const [ogUrl, setOgUrl] = useState("Default Page URL");
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -100,6 +103,12 @@ const Frontpage = () => {
       name !== "" && type !== "" && course !== "" && linkedin !== ""
     );
   };
+
+
+  // console.log("ogTitle:", ogTitle);
+  // console.log("ogDescription:", ogDescription);
+  // console.log("ogImage:", ogImage);
+  // console.log("ogUrl:", ogUrl);
 
   const handleCertificateChange = (event) => {
     const selectedValue = event.target.value;
@@ -122,7 +131,12 @@ const Frontpage = () => {
       linkedin: linkedin,
     };
     // console.log("obj:", obj);
-
+        
+    // Update dynamic values based on your logic
+    // setOgTitle(`Certificate for ${obj.name}`);
+    // setOgDescription(`Achievement in ${obj.course}`);
+    // setOgImage("URL of the image you want to use");
+    // setOgUrl("URL of your page");
     setIsClicked(true);
     fetch("https://seri-knsj.onrender.com/save", {
       method: "POST",
@@ -133,7 +147,8 @@ const Frontpage = () => {
     })
       .then((res) => res.json())
       .then((res) => {
-        console.log("Res:", res);
+        // console.log("Res:", res);
+
         setTimeout(() => {
           navigate(`/display/${res.data._id}`);
         }, 3000);
@@ -142,13 +157,12 @@ const Frontpage = () => {
         console.log(err);
       });
   };
+
+
+
   return (
-    <>
-    <Helmet>
-        {/* <title>Your Frontpage Title</title> */}
-        <meta property="og:title" content="Your Frontpage OG Title" />
-        {/* Add other OG tags as needed */}
-      </Helmet>
+    
+    
     <Box
       w={"80%"}
       margin={"auto"}
@@ -230,7 +244,7 @@ const Frontpage = () => {
         {isClicked ? "Generating Certificate" : "Generate Certificate"}
       </Button>
     </Box>
-    </>
+    
   );
 };
 
