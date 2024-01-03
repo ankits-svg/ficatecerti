@@ -25,9 +25,15 @@ import { PiBookmarks } from "react-icons/pi";
 //http://localhost:1200
 // https://serverbyte.onrender.com/save
 const DisplayPage = () => {
+  const date1 = new Date();
+  const showTime1 =
+    date1.getHours() + ":" + date1.getMinutes() + ":" + date1.getSeconds();
+
+ 
   const [data, setData] = useState({});
   const { id } = useParams();
-  const [url, setUrl] = useState(`https://seri-knsj.onrender.com/get/${id}`);
+  // console.log("idddd:",id)
+  // const [url, setUrl] = useState(`http://localhost:1200/get/${id}`);
   const inputRef = useRef(null);
   const currentUrl = window.location.href;
   const [body, setBody] = useState("");
@@ -35,14 +41,12 @@ const DisplayPage = () => {
   const navigate = useNavigate();
   const [canvasRef, setCanvasRef] = useState(null);
   const [cloud, setCloud] = useState(null);
+  
   const [isCopied, setIsCopied] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [img,setImg]=useState(localStorage.getItem("certificate-image")||[])
-  const date1 = new Date();
-  const showTime1 =
-    date1.getHours() + ":" + date1.getMinutes() + ":" + date1.getSeconds();
-
+  const [img,setImg]=useState(null)
   const date2 = new Date();
+  
   const showTime2 =
     date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds();
   const handleCanvasRef = (canvas) => {
@@ -52,7 +56,7 @@ const DisplayPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(url);
+        const res = await fetch(`http://localhost:1200/get/${id}`);
         const data = await res.json();
         // console.log("1st render:", data.data, " ", showTime1);
         setData(data.data);
@@ -61,22 +65,33 @@ const DisplayPage = () => {
         setBody(newBody.body);
         setTopic(newBody.topic);
         // console.log("insideuseeffect:",data.data)
+        // Add a small delay before retrieving the item
         
+      // setTimeout(() => {
+      //   setImg(localStorage.getItem("certificate-image"));
+      // }, 100);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchData();
+    // setTimeout(()=>{
+      
+    //   setImg(localStorage.getItem("certificate-image"))
+    // },4000)
+    // setImg(localStorage.getItem("certificate-image"))
   }, [id]);
 
+  // console.log("img from:",img)
   useEffect(() => {
+   
     // const img = localStorage.getItem("certificate-image");
+    // console.log()
     // console.log("getting image from localstorage:",img)
     const updateImage = async () => {
       try {
         
-        const res = await fetch(`https://seri-knsj.onrender.com/update/${id}`, {
+        const res = await fetch(`http://localhost:1200/update/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -86,15 +101,42 @@ const DisplayPage = () => {
         const data = await res.json();
         // console.log("2nd render:", data.uploadedImage, " ", showTime2);
         // localStorage.setItem('url',data.uploadedImage)
+       
         setCloud(data.uploadedImage);
+        
       } catch (error) {
         console.error("Error updating image:", error);
       }
     };
+   
+    // console.log("cloud:",cloud)
+      // setTimeout(() => {
+        
+      //   updateImage();
+      //   console.log("getting image from localstorage:",img)
+      // }, 3000);
+      // setTimeout(()=>{
+      //   setImg(localStorage.getItem("certificate-image"));
+      // },1200)
 
-    updateImage();
-  }, [id]);
+      const getImageFromLocalStorage = () => {
+        const storedImage = localStorage.getItem("certificate-image");
+        setImg(storedImage);
+      };
+  
+      getImageFromLocalStorage();
+      setTimeout(() => {
+        updateImage();
+      }, 3000);
+      setTimeout(() => {
+        setImg(localStorage.getItem("certificate-image"));
+      }, 1200);
+  }, [id,img]);
 
+  // setTimeout(()=>{
+  //   localStorage.removeItem('certificate-image')
+  //   window.location.reload()
+  // },10000)
   const handleCopyClick = () => {
     if (inputRef.current) {
       inputRef.current.select();
@@ -151,22 +193,37 @@ const DisplayPage = () => {
 
   
 
+  // const handleDownload = async () => {
+  //   if (canvasRef) {
+  //     // const imageData = localStorage.getItem("certificate-image");
+
+  //     if (img) {
+  //       const link = document.createElement("a");
+  //       link.href = img;
+
+  //       link.download = `${data.course}.png`;
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //       // window.location.reload();
+  //     } else {
+  //       console.error("No image data found in localStorage.");
+  //     }
+  //   }
+  // };
+
   const handleDownload = async () => {
-    if (canvasRef) {
-      const imageData = localStorage.getItem("certificate-image");
+    if (img) {
+      const link = document.createElement("a");
+      link.href = img;
 
-      if (imageData) {
-        const link = document.createElement("a");
-        link.href = imageData;
-
-        link.download = `${data.course}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        // window.location.reload();
-      } else {
-        console.error("No image data found in localStorage.");
-      }
+      link.download = `${data.course}.png`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      // window.location.reload();
+    } else {
+      console.error("No image data found in localStorage.");
     }
   };
 

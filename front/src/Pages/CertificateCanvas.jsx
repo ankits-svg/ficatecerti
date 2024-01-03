@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 
 
 const CertificateCanvas = ({ data, handleCanvasRef }) => {
+  const date1 = new Date();
+  const showTime1 =
+  date1.getHours() + ":" + date1.getMinutes() + ":" + date1.getSeconds();
 
   const {_id, name, type, course } = data;
   
@@ -32,17 +35,19 @@ const CertificateCanvas = ({ data, handleCanvasRef }) => {
 
       drawContent();
       
-      localStorage.setItem("certificate-image",canvas.toDataURL("image/png"));
+      // localStorage.setItem("certificate-image",canvas.toDataURL("image/png"));
 
-      // try {
+      try {
 
-      //   localStorage.setItem("certificate-image",canvas.toDataURL("image/png"));
-      // } catch (err) {
-      //   console.error(`Error saving image to localStorage: ${err}`);
-      // }
+        localStorage.setItem("certificate-image", canvas.toDataURL("image/png"), () => {
+          handleCanvasRef(canvas);
+        });
+      } catch (err) {
+        console.error(`Error saving image to localStorage: ${err}`);
+      }
 
 
-      handleCanvasRef(canvas);
+      
     };
    
     img.src = require("./log.png");

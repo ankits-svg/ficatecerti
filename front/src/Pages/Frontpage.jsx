@@ -72,7 +72,7 @@ const Frontpage = () => {
     // setOgImage("URL of the image you want to use");
     // setOgUrl("URL of your page");
     setIsClicked(true);
-    fetch("https://seri-knsj.onrender.com/save", {
+    fetch("http://localhost:1200/save", {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {
@@ -85,7 +85,7 @@ const Frontpage = () => {
 
         setTimeout(() => {
           navigate(`/display/${res.data._id}`);
-        }, 3000);
+        }, 1000);
       })
       .catch((err) => {
         console.log(err);

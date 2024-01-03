@@ -73,9 +73,9 @@ app.patch("/update/:id", async (req, res) => {
   const { id } = req.params;
   
   const { img } = req.body;
-
+  // console.log("iasdadad:",img)
   const rank = await RankModel.findById(id);
-  console.log(rank)
+  // console.log(rank)
   //New code for cloudinary
   try {
     // DEFINE UPLOAD OPTIONS
@@ -88,13 +88,18 @@ app.patch("/update/:id", async (req, res) => {
     // console.log("options:",options)
     // UPLOAD IMAGE TO CLOUDINARY
     const response = await cloudinary.uploader.upload(img, options);
+    // console.log("response:",response)
     // RETURN UPLOADED IMAGE DATA
     const uploadedImage = response.url; 
     
     await RankModel.findByIdAndUpdate(id, { img:uploadedImage })
+    // console.log("rankss:",rankss)
     
+    // console.log("uploadedImage:",uploadedImage)
     // RETURN COMPLETE RESPONSE
     return res.status(200).json({ uploadedImage, response });
+    
+    // return res.send({"msg":"cloudinary data","data":rankss})
     // CATCH ERROR
   } catch (error) {
     return res.status(500).json({ message: error.message });
