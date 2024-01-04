@@ -16,6 +16,7 @@ import {
 import { MdDownload } from "react-icons/md";
 import { FiAward } from "react-icons/fi";
 import { PiBookmarks } from "react-icons/pi";
+import DocumentMeta from 'react-document-meta';
 
 // const token = "f20bcfdf6bbe0d64ba13777b9fe5a89ccca3b546";
 
@@ -56,7 +57,7 @@ const DisplayPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:1200/get/${id}`);
+        const res = await fetch(`https://seri-knsj.onrender.com/get/${id}`);
         const data = await res.json();
         // console.log("1st render:", data.data, " ", showTime1);
         setData(data.data);
@@ -65,21 +66,13 @@ const DisplayPage = () => {
         setBody(newBody.body);
         setTopic(newBody.topic);
         // console.log("insideuseeffect:",data.data)
-        // Add a small delay before retrieving the item
-        
-      // setTimeout(() => {
-      //   setImg(localStorage.getItem("certificate-image"));
-      // }, 100);
+       
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
     fetchData();
-    // setTimeout(()=>{
-      
-    //   setImg(localStorage.getItem("certificate-image"))
-    // },4000)
-    // setImg(localStorage.getItem("certificate-image"))
+
   }, [id]);
 
   // console.log("img from:",img)
@@ -91,7 +84,7 @@ const DisplayPage = () => {
     const updateImage = async () => {
       try {
         
-        const res = await fetch(`http://localhost:1200/update/${id}`, {
+        const res = await fetch(`https://seri-knsj.onrender.com/update/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -109,15 +102,6 @@ const DisplayPage = () => {
       }
     };
    
-    // console.log("cloud:",cloud)
-      // setTimeout(() => {
-        
-      //   updateImage();
-      //   console.log("getting image from localstorage:",img)
-      // }, 3000);
-      // setTimeout(()=>{
-      //   setImg(localStorage.getItem("certificate-image"));
-      // },1200)
 
       const getImageFromLocalStorage = () => {
         const storedImage = localStorage.getItem("certificate-image");
@@ -154,7 +138,8 @@ const DisplayPage = () => {
       );
     } else {
       // console.error("No cloud data available.");
-      window.location.reload()
+      alert('...Loading')
+      // window.location.reload()
     }
   };
 
@@ -163,12 +148,13 @@ const DisplayPage = () => {
     if (cloud) {
       const course = `${data.course}`;
       const cloudinary_url = `${cloud}`;
+      console.log("cloudinary_url:",cloudinary_url)
       const tweetText = `I just earned ${course} skill certificate via @ByteXL. Get your skills certified and show the world what you can do! #skillup, ${cloudinary_url}`;
       const encodedTweetText = encodeURIComponent(tweetText);
       window.open(`https://twitter.com/intent/tweet?text=${encodedTweetText}`);
     } else {
       // console.error("No cloud data available.");
-      window.location.reload()
+      alert('...Loading')
     }
   };
 
@@ -184,33 +170,12 @@ const DisplayPage = () => {
     } else {
       // console.error("No cloud data available.");
       // alert('might be some url is not available')
-      window.location.reload()
+      alert('...Loading')
       
     }
     // window.location.reload()
   };
 
-
-  
-
-  // const handleDownload = async () => {
-  //   if (canvasRef) {
-  //     // const imageData = localStorage.getItem("certificate-image");
-
-  //     if (img) {
-  //       const link = document.createElement("a");
-  //       link.href = img;
-
-  //       link.download = `${data.course}.png`;
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       document.body.removeChild(link);
-  //       // window.location.reload();
-  //     } else {
-  //       console.error("No image data found in localStorage.");
-  //     }
-  //   }
-  // };
 
   const handleDownload = async () => {
     if (img) {
@@ -235,7 +200,9 @@ const DisplayPage = () => {
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-    }, 1000); 
+      
+    }, 1000);
+    // window.location.href=({cloud},"_blank")
   };
 
   const extractFirstWords = (text, numberOfWords) => {
@@ -246,23 +213,32 @@ const DisplayPage = () => {
       return ""; 
     }
   };
+
+  const meta = {
+    title: `${data.name}_${data.course} Skill Certificate`,
+    description: extractFirstWords(data.course, 20),
+    canonical: `${cloud}`,
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'keywords', content: 'react,meta,document,html,tags' },
+      { property: 'og:title', content: `${data.name}_${data.course} Skill Certificate` },
+      { property: 'og:description', content: extractFirstWords(data.course, 20) },
+      { property: 'og:image', content: cloud },
+      { property: 'og:url', content: currentUrl },
+      { property: 'og:type', content: 'website' },
+      // Twitter specific tags
+      { name: 'twitter:card', content: 'summary_large_image' },
+      { name: 'twitter:title', content: `${data.name}_${data.course} Skill Certificate` },
+      { name: 'twitter:description', content: extractFirstWords(data.course, 20) },
+      { name: 'twitter:image', content: cloud },
+    ],
+  };
   
   // console.log(`${data.course} Skill Certificate`,extractFirstWords(data.course, 20), cloud, currentUrl)
   return (
     <>
-    <Helmet>
-            {/* ... (your existing meta tags) */}
-            {/* LinkedIn OG tags */}
-            <meta property="og:title" content={`${data.course} Skill Certificate`} />
-            <meta property="og:description" content={extractFirstWords(data.course, 20)} />
-            {/* <meta property="og:image" content={cloud || defaultImageUrl} /> */}
-            <meta name="image" property="og:image" content={cloud}></meta>
-            <meta property="og:url" content={currentUrl} />
-            <meta property="og:type" content="website" />
-            <meta property="og:site_name" content="ByteXL" />
-            <meta name="author" content="Ankitsa"/>
-          </Helmet>
-    
+    {/* <Helmet {...meta}/> */}
+    {/* <DocumentMeta {...meta}> */}
     <Box className="containerStyle">
     
           
@@ -495,6 +471,8 @@ const DisplayPage = () => {
         <Box>{isLoading && <Box>...Loading</Box>}</Box>
       )}
     </Box>
+    {/* </DocumentMeta> */}
+    
     </>
   );
 };

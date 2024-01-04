@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Helmet } from 'react-helmet-async';
+import React, { useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -13,10 +13,7 @@ import {
 import { certificateTypes } from "../certificateTypes";
 import { Topicsdata } from "../Topicsdata";
 import { BeatLoader } from "react-spinners";
-
-
-
-
+import DocumentMeta from 'react-document-meta';
 
 const Frontpage = () => {
   // const toast = useToast()
@@ -26,10 +23,7 @@ const Frontpage = () => {
   const [linkedin, setLinkedin] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-  // const [ogTitle, setOgTitle] = useState("Default Title");
-  // const [ogDescription, setOgDescription] = useState("Default Description");
-  // const [ogImage, setOgImage] = useState("Default Image URL");
-  // const [ogUrl, setOgUrl] = useState("Default Page URL");
+
   const navigate = useNavigate();
 
   const validateForm = () => {
@@ -37,12 +31,6 @@ const Frontpage = () => {
       name !== "" && type !== "" && course !== "" && linkedin !== ""
     );
   };
-
-
-  // console.log("ogTitle:", ogTitle);
-  // console.log("ogDescription:", ogDescription);
-  // console.log("ogImage:", ogImage);
-  // console.log("ogUrl:", ogUrl);
 
   const handleCertificateChange = (event) => {
     const selectedValue = event.target.value;
@@ -65,14 +53,9 @@ const Frontpage = () => {
       linkedin: linkedin,
     };
     // console.log("obj:", obj);
-        
-    // Update dynamic values based on your logic
-    // setOgTitle(`Certificate for ${obj.name}`);
-    // setOgDescription(`Achievement in ${obj.course}`);
-    // setOgImage("URL of the image you want to use");
-    // setOgUrl("URL of your page");
+
     setIsClicked(true);
-    fetch("http://localhost:1200/save", {
+    fetch("https://seri-knsj.onrender.com/save", {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {
@@ -92,11 +75,23 @@ const Frontpage = () => {
       });
   };
 
+  const meta = {
+    title: `${course} Certificate - ByteXL`,
+    description: `Generate a ${course} certificate with ByteXL. Join our community of developers and enhance your coding skills!`,
+    
+  }
 
-
+  const metaDescription = `Generate a ${course} certificate with ByteXL. Join our community of developers and enhance your coding skills!`;
+  const ogTitle = `${course} Certificate - ByteXL`;
+  const ogDescription = `Generate a ${course} certificate with ByteXL. Join our community of developers and enhance your coding skills!`;
+  // const ogImageUrl =
+  // Update meta tags dynamically
+  document.getElementById("meta-description").content = metaDescription;
+  document.getElementById("meta-og-title").content = ogTitle;
+  document.getElementById("meta-og-description").content = ogDescription;
+  // document.getElementById("meta-og-image").content = ogImageUrl;
+  
   return (
-    
-    
     <Box
       w={"80%"}
       margin={"auto"}
@@ -105,8 +100,19 @@ const Frontpage = () => {
       p={"10px"}
       borderRadius={"14"}
     >
-      
-
+      <Helmet>
+        <meta
+          name="description"
+          content={`Generate a ${course} certificate with ByteXL. Join our community of developers and enhance your coding skills!`}
+        />
+        <meta property="og:title" content={`${course} Certificate - ByteXL`} />
+        <meta
+          property="og:description"
+          content={`Generate a ${course} certificate with ByteXL. Join our community of developers and enhance your coding skills!`}
+        />
+        {/* <meta property="og:image" content={ogImage} /> */}
+      </Helmet>
+      <DocumentMeta {...meta}>
       <FormControl isRequired>
         <FormLabel htmlFor="nameType">Name of Achiever:</FormLabel>
         <Input
@@ -177,8 +183,8 @@ const Frontpage = () => {
       >
         {isClicked ? "Generating Certificate" : "Generate Certificate"}
       </Button>
+      </DocumentMeta>
     </Box>
-    
   );
 };
 
