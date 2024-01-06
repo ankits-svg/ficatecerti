@@ -136,6 +136,9 @@ async function uploadImageToGoogleCloudStorage(id, image) {
   const fileName = `${id}.png`; // Adjust the file name as needed   //1
   const filePath = path.join(__dirname, "temp", fileName); //1
 
+
+
+  
   // Save the image to a temporary file
   await saveImageToFile(image, filePath).catch((error) => {
     throw new Error(`Failed to save image to file: ${error.message}`);
