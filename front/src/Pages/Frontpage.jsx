@@ -14,22 +14,24 @@ import { certificateTypes } from "../certificateTypes";
 import { Topicsdata } from "../Topicsdata";
 import { BeatLoader } from "react-spinners";
 import DocumentMeta from "react-document-meta";
+// import { useToast } from '@chakra-ui/react'
 
 const Frontpage = () => {
   // const toast = useToast()
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [course, setCourse] = useState("");
-  const [linkedin, setLinkedin] = useState("");
+  // const [linkedin, setLinkedin] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
-
+    const toast = useToast()
   const navigate = useNavigate();
 
   const validateForm = () => {
-    setIsFormValid(
-      name !== "" && type !== "" && course !== "" && linkedin !== ""
-    );
+    // setIsFormValid(
+    //   name !== "" && type !== "" && course !== ""
+    // );
+    setIsFormValid(name.trim() !== "" && type.trim() !== "" && course.trim() !== "");
   };
 
   const handleCertificateChange = (event) => {
@@ -46,13 +48,13 @@ const Frontpage = () => {
     let obj = {
       name: name,
       type: type,
-      course: course,
-      linkedin: linkedin,
+      course: course
     };
     
 
     setIsClicked(true);
-    fetch("https://seri-knsj.onrender.com/save", {
+    if(obj.name!=="" && obj.type!=="" && obj.course!==""){
+      fetch("http://localhost:1200/save", {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {
@@ -69,6 +71,18 @@ const Frontpage = () => {
       .catch((err) => {
         console.log(err);
       });
+    }else{
+      toast({
+        title: 'Please fill the details first',
+        description: "Make sure all required fields are filled.",
+        status: 'warning',
+        duration: 5000,
+        isClosable: true,
+      });
+      setTimeout(() => {
+        window.location.reload()
+      }, 2000);
+    }
   };
 
   const meta = {
@@ -148,7 +162,7 @@ const Frontpage = () => {
             ))}
           </Select>
         </FormControl>
-        <FormControl isRequired>
+        {/* <FormControl isRequired>
           <FormLabel htmlFor="linkedinType">Linkedin Username:</FormLabel>
           <Input
             type="text"
@@ -159,14 +173,14 @@ const Frontpage = () => {
               validateForm();
             }}
           />
-        </FormControl>
+        </FormControl> */}
         <Button
           onClick={handleGenerate}
           bg={isClicked ? "blue" : "orange"}
           color={isClicked ? "white" : "black"}
           mt="3%"
           isLoading={isClicked}
-          isDisabled={!isFormValid}
+          // isDisabled={!isFormValid}
           _loading={{
             color: "white",
             bg: "blue",

@@ -38,9 +38,11 @@ const CertificateCanvas = ({ data, handleCanvasRef }) => {
       // localStorage.setItem("certificate-image",canvas.toDataURL("image/png"));
 
       try {
-
+        
         localStorage.setItem("certificate-image", canvas.toDataURL("image/png"), () => {
+          localStorage.setItem('timetogeneratecanvas',showTime1)
           handleCanvasRef(canvas);
+          
         });
       } catch (err) {
         console.error(`Error saving image to localStorage: ${err}`);

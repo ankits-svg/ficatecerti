@@ -26,10 +26,10 @@ import { Spinner } from "@chakra-ui/react";
 // https://serverbyte.onrender.com/save
 const DisplayPage = () => {
   const date1 = new Date();
-  
+
   const [data, setData] = useState({});
   const { id } = useParams();
- 
+
   const inputRef = useRef(null);
   const currentUrl = window.location.href;
   const [body, setBody] = useState("");
@@ -42,6 +42,7 @@ const DisplayPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [img, setImg] = useState(null);
   const [load, setLoad] = useState(false);
+  const updateImageTimeoutRef = useRef(null);
   const [meta, setMeta] = useState({
     title: "",
     description: "",
@@ -56,12 +57,20 @@ const DisplayPage = () => {
     setCanvasRef(canvas);
   };
 
+  const transformLink = (originalLink) => {
+    // Extract the path after "https://storage.googleapis.com/"
+    const path = originalLink.replace("https://storage.googleapis.com/", "");
+
+    // Create the new link by appending the extracted path to "https://storage.cloud.google.com/"
+    return `https://storage.cloud.google.com/${path}`;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`https://seri-knsj.onrender.com/get/${id}`);
+        const res = await fetch(`http://localhost:1200/get/${id}`);
         const data = await res.json();
-        
+
         setData(data.data);
 
         const newBody = Topicsdata.find((el) => el.topic === data.data.course);
@@ -106,11 +115,10 @@ const DisplayPage = () => {
               content: "Your LinkedIn Author Profile URL",
             },
             { property: "og:article:section", content: "Article Section" },
-            { property: "og:article:tag", content: "Tag1,Tag2" }, 
+            { property: "og:article:tag", content: "Tag1,Tag2" },
           ],
         };
 
-        
         setMeta(newMeta);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -119,12 +127,47 @@ const DisplayPage = () => {
     fetchData();
   }, [id]);
 
+  // let arr=[]
+  // useEffect(() => {
+  //   const updateImage = async () => {
+  //     try {
+  //       const res = await fetch(`http://localhost:1200/updates/${id}`, {
+  //         method: "PATCH",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ img: img }),
+  //       });
+  //       const data = await res.json();
+
+  //       // arr.push(data.uploadedImage)
+  //       // console.log("arr:",arr)
+  //       // console.log("uploadedImagedata:",data)
+  //       let a = `https://storage.cloud.google.com/certificate_ankits745_data/Certificate/${id}.png`;
+  //       setCloud(a);
+  //     } catch (error) {
+  //       console.error("Error updating image:", error);
+  //     }
+  //   };
+
+  //   const getImageFromLocalStorage = () => {
+  //     const storedImage = localStorage.getItem("certificate-image");
+  //     setImg(storedImage);
+  //   };
+
+  //   getImageFromLocalStorage();
+  //   setTimeout(() => {
+  //     updateImage();
+  //   }, 3000);
+  //   setTimeout(() => {
+  //     setImg(localStorage.getItem("certificate-image"));
+  //   }, 1200);
+  // }, [id, img]);
 
   useEffect(() => {
-    
     const updateImage = async () => {
       try {
-        const res = await fetch(`https://seri-knsj.onrender.com/update/${id}`, {
+        const res = await fetch(`http://localhost:1200/updates/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -132,8 +175,14 @@ const DisplayPage = () => {
           body: JSON.stringify({ img: img }),
         });
         const data = await res.json();
+        console.log("data:",data.uploadedImage)
+        const originalLink = data.uploadedImage;
 
+        // Transform the link using the helper function
+        const newLink = transformLink(originalLink);
+        // let a = `https://storage.cloud.google.com/certificate_ankits745_data/Certificate/${id}.png`;
         setCloud(data.uploadedImage);
+        
       } catch (error) {
         console.error("Error updating image:", error);
       }
@@ -145,12 +194,27 @@ const DisplayPage = () => {
     };
 
     getImageFromLocalStorage();
-    setTimeout(() => {
-      updateImage();
+
+    const debouncedUpdateImage = () => {
+      clearTimeout(updateImageTimeoutRef.current);
+      updateImageTimeoutRef.current = setTimeout(() => {
+        updateImage();
+      }, 300);
+    };
+
+    const updateImageTimeout = setTimeout(() => {
+      debouncedUpdateImage();
     }, 3000);
-    setTimeout(() => {
+
+    const setImgTimeout = setTimeout(() => {
       setImg(localStorage.getItem("certificate-image"));
     }, 1200);
+
+    return () => {
+      clearTimeout(updateImageTimeout);
+      clearTimeout(setImgTimeout);
+      clearTimeout(updateImageTimeoutRef.current);
+    };
   }, [id, img]);
 
   const handleCopyClick = () => {
@@ -175,7 +239,6 @@ const DisplayPage = () => {
       }, 1000);
     } else {
       console.error("No cloud data available.");
-      
     }
   };
 
@@ -187,7 +250,6 @@ const DisplayPage = () => {
 
       const tweetText = `I just earned ${course} skill certificate via @ByteXL. Get your skills certified and show the world what you can do! #skillup, ${cloudinary_url}`;
       const encodedTweetText = encodeURIComponent(tweetText);
-     
 
       setTimeout(() => {
         window.open(
@@ -196,16 +258,14 @@ const DisplayPage = () => {
         setLoad(false);
       }, 1000);
     } else {
-      
       console.log("No cloud data available.");
     }
   };
 
   const handleLinkedin = () => {
-   
     if (cloud) {
       setLoad(true);
-      
+
       const encodedImageUrl = encodeURIComponent(cloud);
       const linkedinShareLink = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedImageUrl}`;
       setTimeout(() => {
@@ -213,11 +273,8 @@ const DisplayPage = () => {
         setLoad(false);
       }, 800);
     } else {
-      
       console.log("No cloud data available.");
-     
     }
-    
   };
 
   const handleDownload = async () => {
@@ -229,7 +286,6 @@ const DisplayPage = () => {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    
     } else {
       console.error("No image data found in localStorage.");
     }
@@ -258,7 +314,7 @@ const DisplayPage = () => {
   return (
     <>
       <Helmet {...meta} />
-      
+
       {/* {showTime2} */}
       <Box className="containerStyle">
         <Box w={{ base: "100%", lg: "100%" }}>
@@ -489,10 +545,9 @@ const DisplayPage = () => {
             </Box>
           </>
         ) : (
-          <Box>{isLoading && <Box>...Loading</Box>}</Box>
+          <Box>{load && <Box>...Loading</Box>}</Box>
         )}
       </Box>
-      
     </>
   );
 };
