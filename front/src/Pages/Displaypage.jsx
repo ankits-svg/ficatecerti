@@ -131,7 +131,7 @@ const DisplayPage = () => {
   // useEffect(() => {
   //   const updateImage = async () => {
   //     try {
-  //       const res = await fetch(`http://localhost:1200/updates/${id}`, {
+  //       const res = await fetch(`https://bytexxl.onrender.com/updates/${id}`, {
   //         method: "PATCH",
   //         headers: {
   //           "Content-Type": "application/json",
