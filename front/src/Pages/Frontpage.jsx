@@ -52,9 +52,12 @@ const Frontpage = () => {
     };
     
 
+    // https://bytexxl.onrender.com/
+    //http://localhost:1200
+
     setIsClicked(true);
     if(obj.name!=="" && obj.type!=="" && obj.course!==""){
-      fetch("http://localhost:1200/save", {
+      fetch("https://bytexxl.onrender.com/save", {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {

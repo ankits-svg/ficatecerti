@@ -7,7 +7,6 @@ const { RankModel } = require("./models/hacker.models");
 const path = require("path");
 const cloudinary = require("cloudinary").v2;
 const { Storage } = require("@google-cloud/storage");
-// LOAD ENVIROMENT VARIABLES
 const { CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_CLOUD_NAME } =
   process.env;
 
@@ -20,7 +19,7 @@ cloudinary.config({
 const cors = require("cors");
 
 let projectId = process.env.projectId; // Get this from Google Cloud
-// let keyFilename = "C:UsershpDownloadsaxial-engine-410216-0df0ce8f2e41.json";
+
 let keyFilename =
   process.env.keyFilename;
 
@@ -35,6 +34,25 @@ const bucketName = process.env.bucket; // Replace with your actual bucket name
 port = process.env.port || 2200;
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(cors());
+
+
+// CORS Configuration
+const corsConfig = [
+  {
+    maxAgeSeconds: 3600,
+    method: ["GET"],
+    origin: ["https://front-nuqxdx86l-ankits-projects-b7dffc9e.vercel.app"], //   Actual domain
+    responseHeader: ["Content-Type"],
+  },
+];
+
+// Set CORS Configuration for the bucket
+async function configureBucketCors() {
+  await storage.bucket(bucketName).setCorsConfiguration(corsConfig);
+  console.log(`Bucket ${bucketName} was updated with CORS configuration`);
+}
+
+configureBucketCors().catch(console.error);
 
 app.use(bodyParser.json({ limit: "50mb", extended: true }));
 app.use(express.json({ limit: "10mb", extended: true }));

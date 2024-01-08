@@ -23,7 +23,7 @@ import { Spinner } from "@chakra-ui/react";
 
 // https://seri-knsj.onrender.com
 //http://localhost:1200
-// https://serverbyte.onrender.com/save
+// https://bytexxl.onrender.com/
 const DisplayPage = () => {
   const date1 = new Date();
 
@@ -68,7 +68,7 @@ const DisplayPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`http://localhost:1200/get/${id}`);
+        const res = await fetch(`https://bytexxl.onrender.com/get/${id}`);
         const data = await res.json();
 
         setData(data.data);
@@ -167,7 +167,7 @@ const DisplayPage = () => {
   useEffect(() => {
     const updateImage = async () => {
       try {
-        const res = await fetch(`http://localhost:1200/updates/${id}`, {
+        const res = await fetch(`https://bytexxl.onrender.com/updates/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
