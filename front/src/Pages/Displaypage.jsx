@@ -68,7 +68,7 @@ const DisplayPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`https://bytexxl.onrender.com/get/${id}`);
+        const res = await fetch(`https://newbytexl.onrender.com/get/${id}`);
         const data = await res.json();
 
         setData(data.data);
@@ -167,7 +167,7 @@ const DisplayPage = () => {
   useEffect(() => {
     const updateImage = async () => {
       try {
-        const res = await fetch(`https://bytexxl.onrender.com/updates/${id}`, {
+        const res = await fetch(`https://newbytexl.onrender.com/updates/${id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",

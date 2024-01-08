@@ -21,9 +21,10 @@ const cors = require("cors");
 let projectId = process.env.projectId; // Get this from Google Cloud
 
 let keyFilename = process.env.keyFilename;
-
-keyFilename = path.normalize(keyFilename);
-
+// console.log("keyfilename1:",keyFilename)
+// keyFilename = path.normalize(keyFilename);
+console.log("keyfilename2:",keyFilename)
+// keyFilename = path.join(__dirname, keyFilename);
 // Get this from Google Cloud -> Credentials -> Service Accounts
 const storage = new Storage({
   projectId,

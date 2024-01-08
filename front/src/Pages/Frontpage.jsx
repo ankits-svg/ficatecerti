@@ -59,7 +59,7 @@ const Frontpage = () => {
 
     setIsClicked(true);
     if(obj.name!=="" && obj.type!=="" && obj.course!==""){
-      fetch("https://bytexxl.onrender.com/save", {
+      fetch("https://newbytexl.onrender.com/save", {
       method: "POST",
       body: JSON.stringify(obj),
       headers: {
