@@ -21,7 +21,7 @@ import { Spinner } from "@chakra-ui/react";
 
 // const token = "f20bcfdf6bbe0d64ba13777b9fe5a89ccca3b546";
 
-// https://seri-knsj.onrender.com
+
 //http://localhost:1200
 // https://bytexxl.onrender.com/
 const DisplayPage = () => {
@@ -171,7 +171,7 @@ const DisplayPage = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            'Access-Control-Allow-Origin': '*',
+            // 'Access-Control-Allow-Origin': '*',
           },
           body: JSON.stringify({ img: img }),
         });

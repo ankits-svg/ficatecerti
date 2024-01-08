@@ -40,9 +40,9 @@ app.use(cors({ origin: "*" }));
 const corsConfig = [
   {
     maxAgeSeconds: 3600,
-    method: ["GET"],
+    method: ["GET","PATCH"],
     origin: ["*"], //   Actual domain
-    responseHeader: ["Content-Type"],
+    responseHeader: ["*"],
   },
 ];
 
