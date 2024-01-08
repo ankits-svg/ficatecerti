@@ -12,6 +12,9 @@ import {
   Text,
   Heading,
   grid,
+  Skeleton,
+  Stack,
+  SkeletonCircle,
 } from "@chakra-ui/react";
 import { MdDownload } from "react-icons/md";
 import { FiAward } from "react-icons/fi";
@@ -23,6 +26,7 @@ import { Spinner } from "@chakra-ui/react";
 
 //http://localhost:1200
 // https://bytexxl.onrender.com/
+//https://newbytexl.onrender.com
 const DisplayPage = () => {
   
 
@@ -41,6 +45,7 @@ const DisplayPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [img, setImg] = useState(null);
   const [load, setLoad] = useState(false);
+  const [loader,setLoader]=useState(false)
   const updateImageTimeoutRef = useRef(null);
   const [meta, setMeta] = useState({
     title: "",
@@ -123,6 +128,7 @@ const DisplayPage = () => {
 
 
   useEffect(() => {
+    setLoader(true)
     const updateImage = async () => {
       try {
         const res = await fetch(`https://newbytexl.onrender.com/updates/${id}`, {
@@ -139,7 +145,7 @@ const DisplayPage = () => {
         // Transform the link using the helper function
         const newLink = transformLink(originalLink);
         setCloud(data.uploadedImage);
-        
+        setLoader(false);
       } catch (error) {
         console.error("Error updating image:", error);
       }
@@ -193,7 +199,7 @@ const DisplayPage = () => {
           )}`
         );
         setLoad(false);
-      }, 1000);
+      }, 500);
     } else {
       console.error("No cloud data available.");
     }
@@ -213,7 +219,7 @@ const DisplayPage = () => {
           `https://twitter.com/intent/tweet?text=${encodedTweetText}`
         );
         setLoad(false);
-      }, 1000);
+      }, 500);
     } else {
       console.log("No cloud data available.");
     }
@@ -228,7 +234,7 @@ const DisplayPage = () => {
       setTimeout(() => {
         window.open(linkedinShareLink, "_blank");
         setLoad(false);
-      }, 800);
+      }, 500);
     } else {
       console.log("No cloud data available.");
     }
@@ -337,7 +343,22 @@ const DisplayPage = () => {
                 >
                   Share this Certificate
                 </Text>
-                <Box
+                <>
+                {loader===true ? 
+                (<Box m={{ base: "", lg: "auto" }}
+                w={{ base: "100%", lg: "50%" }}
+                mb={{ base: "5%", lg: "10%" }}
+                ml={{ base: "", lg: "-1" }}
+                display="flex"
+                justifyContent={{ base: "space-around", lg: "space-around" }}>
+                  <SkeletonCircle cursor="pointer"
+                    w={{ base: "7%", lg: "17%" }}/>
+                  <SkeletonCircle cursor="pointer"
+                    w={{ base: "7%", lg: "17%" }} />
+                  <SkeletonCircle cursor="pointer"
+                    w={{ base: "7%", lg: "17%" }} />
+                </Box>) :
+                (<Box
                   // border={"2px solid red"}
                   m={{ base: "", lg: "auto" }}
                   w={{ base: "100%", lg: "50%" }}
@@ -384,7 +405,8 @@ const DisplayPage = () => {
                       alt="linkedin"
                     />
                   </Box>
-                </Box>
+                </Box>)}
+                </>
                 <Box
                   mb="4"
                   className="copyButtonStyle"

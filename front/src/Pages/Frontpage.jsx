@@ -49,6 +49,7 @@ const Frontpage = () => {
 
     // https://bytexxl.onrender.com/
     //http://localhost:1200
+    //https://newbytexl.onrender.com
 
     setIsClicked(true);
     if(obj.name!=="" && obj.type!=="" && obj.course!==""){
