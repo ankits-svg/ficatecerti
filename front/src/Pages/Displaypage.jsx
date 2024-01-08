@@ -176,7 +176,7 @@ const DisplayPage = () => {
           body: JSON.stringify({ img: img }),
         });
         const data = await res.json();
-        console.log("data:",data.uploadedImage)
+        // console.log("data:",data.uploadedImage)
         const originalLink = data.uploadedImage;
 
         // Transform the link using the helper function
