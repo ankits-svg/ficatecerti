@@ -14,6 +14,8 @@ import { certificateTypes } from "../certificateTypes";
 import { Topicsdata } from "../Topicsdata";
 import { BeatLoader } from "react-spinners";
 import DocumentMeta from "react-document-meta";
+
+
 // import { useToast } from '@chakra-ui/react'
 
 const Frontpage = () => {

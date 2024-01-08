@@ -20,8 +20,9 @@ const cors = require("cors");
 
 let projectId = process.env.projectId; // Get this from Google Cloud
 
-let keyFilename =
-  process.env.keyFilename;
+let keyFilename = process.env.keyFilename;
+
+keyFilename = path.normalize(keyFilename);
 
 // Get this from Google Cloud -> Credentials -> Service Accounts
 const storage = new Storage({
@@ -40,7 +41,7 @@ app.use(cors({ origin: "*" }));
 const corsConfig = [
   {
     maxAgeSeconds: 3600,
-    method: ["GET","PATCH"],
+    method: ["GET", "PATCH"],
     origin: ["*"], //   Actual domain
     responseHeader: ["*"],
   },
@@ -139,7 +140,6 @@ app.patch("/updates/:id", async (req, res) => {
     const response = await uploadImageToGoogleCloudStorage(id, img);
     console.log("response:", response);
 
-
     // Update the database with the new image URL
     await RankModel.findByIdAndUpdate(id, { img: response.imageUrl });
     // await RankModel.findByIdAndUpdate(id, { img: originalLink });
@@ -155,9 +155,6 @@ async function uploadImageToGoogleCloudStorage(id, image) {
   const fileName = `${id}.png`; // Adjust the file name as needed   //1
   const filePath = path.join(__dirname, "temp", fileName); //1
 
-
-
-  
   // Save the image to a temporary file
   await saveImageToFile(image, filePath).catch((error) => {
     throw new Error(`Failed to save image to file: ${error.message}`);
