@@ -171,6 +171,7 @@ const DisplayPage = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
+            'Access-Control-Allow-Origin': '*',
           },
           body: JSON.stringify({ img: img }),
         });

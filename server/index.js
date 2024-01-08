@@ -138,6 +138,7 @@ app.patch("/updates/:id", async (req, res) => {
   try {
     const response = await uploadImageToGoogleCloudStorage(id, img);
     console.log("response:", response);
+    
 
     // Update the database with the new image URL
     await RankModel.findByIdAndUpdate(id, { img: response.imageUrl });
