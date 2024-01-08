@@ -16,16 +16,15 @@ import {
 import { MdDownload } from "react-icons/md";
 import { FiAward } from "react-icons/fi";
 import { PiBookmarks } from "react-icons/pi";
-import DocumentMeta from "react-document-meta";
 import { Spinner } from "@chakra-ui/react";
 
-// const token = "f20bcfdf6bbe0d64ba13777b9fe5a89ccca3b546";
+
 
 
 //http://localhost:1200
 // https://bytexxl.onrender.com/
 const DisplayPage = () => {
-  const date1 = new Date();
+  
 
   const [data, setData] = useState({});
   const { id } = useParams();
@@ -49,19 +48,14 @@ const DisplayPage = () => {
     canonical: "",
     meta: [],
   });
-  const date2 = new Date();
-
-  const showTime2 =
-    date2.getHours() + ":" + date2.getMinutes() + ":" + date2.getSeconds();
+  
   const handleCanvasRef = (canvas) => {
     setCanvasRef(canvas);
   };
 
   const transformLink = (originalLink) => {
-    // Extract the path after "https://storage.googleapis.com/"
+    
     const path = originalLink.replace("https://storage.googleapis.com/", "");
-
-    // Create the new link by appending the extracted path to "https://storage.cloud.google.com/"
     return `https://storage.cloud.google.com/${path}`;
   };
 
@@ -127,42 +121,6 @@ const DisplayPage = () => {
     fetchData();
   }, [id]);
 
-  // let arr=[]
-  // useEffect(() => {
-  //   const updateImage = async () => {
-  //     try {
-  //       const res = await fetch(`https://bytexxl.onrender.com/updates/${id}`, {
-  //         method: "PATCH",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ img: img }),
-  //       });
-  //       const data = await res.json();
-
-  //       // arr.push(data.uploadedImage)
-  //       // console.log("arr:",arr)
-  //       // console.log("uploadedImagedata:",data)
-  //       let a = `https://storage.cloud.google.com/certificate_ankits745_data/Certificate/${id}.png`;
-  //       setCloud(a);
-  //     } catch (error) {
-  //       console.error("Error updating image:", error);
-  //     }
-  //   };
-
-  //   const getImageFromLocalStorage = () => {
-  //     const storedImage = localStorage.getItem("certificate-image");
-  //     setImg(storedImage);
-  //   };
-
-  //   getImageFromLocalStorage();
-  //   setTimeout(() => {
-  //     updateImage();
-  //   }, 3000);
-  //   setTimeout(() => {
-  //     setImg(localStorage.getItem("certificate-image"));
-  //   }, 1200);
-  // }, [id, img]);
 
   useEffect(() => {
     const updateImage = async () => {
@@ -171,7 +129,6 @@ const DisplayPage = () => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            // 'Access-Control-Allow-Origin': '*',
           },
           body: JSON.stringify({ img: img }),
         });
@@ -181,7 +138,6 @@ const DisplayPage = () => {
 
         // Transform the link using the helper function
         const newLink = transformLink(originalLink);
-        // let a = `https://storage.cloud.google.com/certificate_ankits745_data/Certificate/${id}.png`;
         setCloud(data.uploadedImage);
         
       } catch (error) {
@@ -315,8 +271,6 @@ const DisplayPage = () => {
   return (
     <>
       <Helmet {...meta} />
-
-      {/* {showTime2} */}
       <Box className="containerStyle">
         <Box w={{ base: "100%", lg: "100%" }}>
           {load ? (
@@ -330,7 +284,6 @@ const DisplayPage = () => {
         <Box></Box>
         {data ? (
           <>
-            {/* Heading */}
             <Box
               textAlign={{ base: "start", lg: "start" }}
               color={"black"}
@@ -355,8 +308,6 @@ const DisplayPage = () => {
               my="2"
             />
             <br />
-
-            {/* Certificate and Share certificate content in column format */}
             <Box
               display={{ base: "flex", lg: "flex" }}
               flexDirection={{ base: "column", lg: "row" }}
@@ -377,8 +328,6 @@ const DisplayPage = () => {
                   handleCanvasRef={handleCanvasRef}
                 />
               </Box>
-
-              {/* column 2nd */}
               <Box w={{ base: "100%", lg: "30%" }} className="certificateshare">
                 <Text
                   fontSize={{ base: "xl", md: "xl", lg: "3xl" }}

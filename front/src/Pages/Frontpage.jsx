@@ -16,23 +16,16 @@ import { BeatLoader } from "react-spinners";
 import DocumentMeta from "react-document-meta";
 
 
-// import { useToast } from '@chakra-ui/react'
-
 const Frontpage = () => {
-  // const toast = useToast()
   const [name, setName] = useState("");
   const [type, setType] = useState("");
   const [course, setCourse] = useState("");
-  // const [linkedin, setLinkedin] = useState("");
   const [isFormValid, setIsFormValid] = useState(false);
   const [isClicked, setIsClicked] = useState(false);
     const toast = useToast()
   const navigate = useNavigate();
 
   const validateForm = () => {
-    // setIsFormValid(
-    //   name !== "" && type !== "" && course !== ""
-    // );
     setIsFormValid(name.trim() !== "" && type.trim() !== "" && course.trim() !== "");
   };
 
@@ -99,7 +92,6 @@ const Frontpage = () => {
   const ogTitle = `${course} Certificate - ByteXL`;
   const ogDescription = `Generate a ${course} certificate with ByteXL. Join our community of developers and enhance your coding skills!`;
   
-  // Update meta tags dynamically
   document.getElementById("meta-description").content = metaDescription;
   document.getElementById("meta-og-title").content = ogTitle;
   document.getElementById("meta-og-description").content = ogDescription;
@@ -167,25 +159,12 @@ const Frontpage = () => {
             ))}
           </Select>
         </FormControl>
-        {/* <FormControl isRequired>
-          <FormLabel htmlFor="linkedinType">Linkedin Username:</FormLabel>
-          <Input
-            type="text"
-            placeholder="Enter linkedin username"
-            value={linkedin}
-            onChange={(e) => {
-              setLinkedin(e.target.value);
-              validateForm();
-            }}
-          />
-        </FormControl> */}
         <Button
           onClick={handleGenerate}
           bg={isClicked ? "blue" : "orange"}
           color={isClicked ? "white" : "black"}
           mt="3%"
           isLoading={isClicked}
-          // isDisabled={!isFormValid}
           _loading={{
             color: "white",
             bg: "blue",
