@@ -35,13 +35,13 @@ port = process.env.port || 2200;
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(cors({ origin: "*" }));
 
-
+//https://front-nuqxdx86l-ankits-projects-b7dffc9e.vercel.app
 // CORS Configuration
 const corsConfig = [
   {
     maxAgeSeconds: 3600,
     method: ["GET"],
-    origin: ["https://front-nuqxdx86l-ankits-projects-b7dffc9e.vercel.app"], //   Actual domain
+    origin: ["*"], //   Actual domain
     responseHeader: ["Content-Type"],
   },
 ];
