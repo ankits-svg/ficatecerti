@@ -71,52 +71,37 @@ const DisplayPage = () => {
         const data = await res.json();
 
         setData(data.data);
+        console.log("Data.data:",data.data)
+        let met=data.data;
 
         const newBody = Topicsdata.find((el) => el.topic === data.data.course);
         setBody(newBody.body);
         setTopic(newBody.topic);
         const newMeta = {
-          title: `${data.data.name}_${data.data.course} Skill Certificate`,
-          description: extractFirstWords(data.data.course, 20),
-          canonical: `${cloud}`,
+          title: `${met.name}_${met.course} Skill Certificate`,
+          description: extractFirstWords(met.course, 20),
+          canonical: `${met.img}`,
           meta: [
             { charset: "utf-8" },
-            { name: "keywords", content: "react,meta,document,html,tags" },
-            {
-              property: "og:title",
-              content: `${data.data.name}_${data.data.course} Skill Certificate`,
-            },
-            {
-              property: "og:description",
-              content: extractFirstWords(data.data.course, 20),
-            },
-            { property: "og:image", content: cloud },
+            { name: "keywords", content: "react, meta, document, html, tags" },
+            // Open Graph (Facebook, LinkedIn) specific tags
+            { property: "og:title", content: `${met.name}_${met.course} Skill Certificate` },
+            { property: "og:description", content: extractFirstWords(met.course, 20) },
+            { property: "og:image", content: met.img },
             { property: "og:url", content: currentUrl },
             { property: "og:type", content: "website" },
+            { property: "og:site_name", content: "Your Site Name" }, // Replace with your site name
+            { property: "article:author", content: "Your LinkedIn Author Profile URL" },
+            { property: "article:section", content: "Article Section" },
+            { property: "article:tag", content: "Tag1,Tag2" },
             // Twitter specific tags
             { name: "twitter:card", content: "summary_large_image" },
-            {
-              name: "twitter:title",
-              content: `${data.data.name}_${data.data.course} Skill Certificate`,
-            },
-            {
-              name: "twitter:description",
-              content: extractFirstWords(data.data.course, 20),
-            },
-            { name: "twitter:image", content: cloud },
-            // Facebook specific tags
-            { property: "og:site_name", content: "Your Site Name" }, // Replace with your site name
-            { property: "og:type", content: "article" },
-
-            // LinkedIn specific tags
-            {
-              property: "og:article:author",
-              content: "Your LinkedIn Author Profile URL",
-            },
-            { property: "og:article:section", content: "Article Section" },
-            { property: "og:article:tag", content: "Tag1,Tag2" },
+            { name: "twitter:title", content: `${met.name}_${met.course} Skill Certificate` },
+            { name: "twitter:description", content: extractFirstWords(met.course, 20) },
+            { name: "twitter:image", content: met.img },
           ],
         };
+        
 
         setMeta(newMeta);
       } catch (error) {
@@ -225,6 +210,9 @@ const DisplayPage = () => {
     }
   };
 
+
+  
+  
   const handleLinkedin = () => {
     if (cloud) {
       setLoad(true);
