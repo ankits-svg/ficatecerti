@@ -80,14 +80,14 @@ const DisplayPage = () => {
         const newMeta = {
           title: `${met.name}_${met.course} Skill Certificate`,
           description: extractFirstWords(met.course, 20),
-          canonical: `${met.img}`,
+          canonical: `${cloud}`,
           meta: [
             { charset: "utf-8" },
             { name: "keywords", content: "react, meta, document, html, tags" },
             // Open Graph (Facebook, LinkedIn) specific tags
             { property: "og:title", content: `${met.name}_${met.course} Skill Certificate` },
             { property: "og:description", content: extractFirstWords(met.course, 20) },
-            { property: "og:image", content: met.img },
+            { property: "og:image", content: cloud },
             { property: "og:url", content: currentUrl },
             { property: "og:type", content: "website" },
             { property: "og:site_name", content: "Your Site Name" }, // Replace with your site name
@@ -98,7 +98,7 @@ const DisplayPage = () => {
             { name: "twitter:card", content: "summary_large_image" },
             { name: "twitter:title", content: `${met.name}_${met.course} Skill Certificate` },
             { name: "twitter:description", content: extractFirstWords(met.course, 20) },
-            { name: "twitter:image", content: met.img },
+            { name: "twitter:image", content: cloud },
           ],
         };
         
