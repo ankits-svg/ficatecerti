@@ -71,7 +71,7 @@ const DisplayPage = () => {
         const data = await res.json();
 
         setData(data.data);
-        console.log("Data.data:",data.data)
+        // console.log("Data.data:",data.data)
         let met=data.data;
 
         const newBody = Topicsdata.find((el) => el.topic === data.data.course);
